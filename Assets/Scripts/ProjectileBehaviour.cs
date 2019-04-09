@@ -4,15 +4,38 @@ using UnityEngine;
 
 public class ProjectileBehaviour : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public float projectileSpeed;
+    public float currentMomentum;
+    public float newSpeed;
+    Rigidbody rb;
+    private GameObject playerShip;
+
+    private void Awake()
     {
-        
+        rb = GetComponent<Rigidbody>();
+        playerShip = GameObject.Find("ShipMover");
+    }
+
+    private void Start()
+    {
+        Invoke("DestroyObject", 6);
+    }
+
+    void DestroyObject()
+    {
+        Destroy(gameObject);
+    }
+    /*
+    private void Start()
+    {
+        newSpeed = projectileSpeed + currentMomentum;
+        transform.rotation = Quaternion.Euler(playerShip.transform.rotation.x, playerShip.transform.rotation.y, playerShip.transform.rotation.z); 
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        
+        //rb.velocity = Vector3.forward * newSpeed;
     }
+    */
 }

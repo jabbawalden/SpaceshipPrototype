@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     private PlayerController playerController;
+    private PlayerShoot playerShoot;
+
     [SerializeField] float speedUpSmooth;
     [SerializeField] float camFOVSmooth;
 
@@ -17,6 +19,7 @@ public class PlayerInput : MonoBehaviour
     private void Awake()
     {
         playerController = GetComponent<PlayerController>();
+        playerShoot = GetComponent<PlayerShoot>();
         currentFOV = defaultFOV;
         cam.fieldOfView = currentFOV;
     }
@@ -41,6 +44,12 @@ public class PlayerInput : MonoBehaviour
             playerController.engineMomentum = Mathf.Lerp(playerController.engineMomentum, playerController.maxEngineMomentum / 2, speedUpSmooth * Time.deltaTime);
             currentFOV = Mathf.Lerp(currentFOV, defaultFOV, camFOVSmooth * Time.deltaTime);
             cam.fieldOfView = currentFOV;
+            //move camera closer - so set initial z length and new z length when speeding, then Mathf.Lerp between them using camFOVSmooth
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            playerShoot.ShootProjectile(playerController.engineMomentum);
         }
     }
 
