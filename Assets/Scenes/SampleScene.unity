@@ -1264,6 +1264,54 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 414242873}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &477431647
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 477431648}
+  - component: {fileID: 477431649}
+  m_Layer: 0
+  m_Name: ShipRotate
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &477431648
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 477431647}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1242758135}
+  m_Father: {fileID: 1199957335}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &477431649
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 477431647}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0.5
+  m_AngularDrag: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &513917262
 GameObject:
   m_ObjectHideFlags: 0
@@ -3389,7 +3437,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1199957335}
   m_Layer: 0
-  m_Name: ShipHolder
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3406,7 +3454,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1242758135}
+  - {fileID: 477431648}
   - {fileID: 1362878880}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -3635,9 +3683,8 @@ GameObject:
   - component: {fileID: 1242758135}
   - component: {fileID: 1242758136}
   - component: {fileID: 1242758138}
-  - component: {fileID: 1242758137}
   m_Layer: 0
-  m_Name: ShipController
+  m_Name: ShipPitch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3655,7 +3702,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 564257654}
-  m_Father: {fileID: 1199957335}
+  m_Father: {fileID: 477431648}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1242758136
@@ -3671,34 +3718,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shipMesh: {fileID: 564257654}
+  ShipRotate: {fileID: 477431648}
   engineMomentum: 0
-  maxEngineMomentum: 70
+  maxEngineMomentum: 60
   inputTurn: 0
   inputPitch: 0
   roll: 0
   yaw: 0
   pitch: 0
   turnSpeed: 2
-  rotateSpeed: -50
-  pitchSpeed: 2
-  smoothRoll: 0.08
+  rotateSpeed: 80
+  pitchSpeed: 10
   smoothPitch: 0.1
---- !u!54 &1242758137
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1242758134}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0.5
-  m_AngularDrag: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  smoothYaw: 0.1
+  smoothRoll: 0.008
 --- !u!114 &1242758138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4301,7 +4334,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b86ba03463150d44197abe2efc91b03f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipPosition: {fileID: 1242758134}
+  shipPosition: {fileID: 477431647}
+  shipPitch: {fileID: 1242758135}
+  cam: {fileID: 0}
   smoothZ: 0.05
   smoothY: 0.1
   smoothX: 0.05
