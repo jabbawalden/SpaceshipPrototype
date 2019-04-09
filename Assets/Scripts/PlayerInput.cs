@@ -5,16 +5,20 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     private PlayerController playerController;
+    [SerializeField] float speedUpSmooth;
+    [SerializeField] float camFOVSmooth;
+
+    [SerializeField] private Camera cam;
+    [SerializeField] private float defaultFOV;
+    [SerializeField] private float boostFOV;
+    [SerializeField] private float currentFOV;
+
 
     private void Awake()
     {
         playerController = GetComponent<PlayerController>();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+        currentFOV = defaultFOV;
+        cam.fieldOfView = currentFOV;
     }
 
     // Update is called once per frame
@@ -24,6 +28,20 @@ public class PlayerInput : MonoBehaviour
         float v = Input.GetAxis("Vertical");
 
         playerController.inputTurn = h;
-        playerController.inputPitch = v;
+        playerController.inputPitch = v; 
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+            playerController.engineMomentum = Mathf.Lerp(playerController.engineMomentum, playerController.maxEngineMomentum, speedUpSmooth * Time.deltaTime);
+            currentFOV = Mathf.Lerp(currentFOV, boostFOV, camFOVSmooth * Time.deltaTime);
+            cam.fieldOfView = currentFOV;
+        }
+        else 
+        {
+            playerController.engineMomentum = Mathf.Lerp(playerController.engineMomentum, playerController.maxEngineMomentum / 2, speedUpSmooth * Time.deltaTime);
+            currentFOV = Mathf.Lerp(currentFOV, defaultFOV, camFOVSmooth * Time.deltaTime);
+            cam.fieldOfView = currentFOV;
+        }
     }
+
 }
