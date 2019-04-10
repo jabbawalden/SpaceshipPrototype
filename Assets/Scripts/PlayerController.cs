@@ -8,7 +8,8 @@ public class PlayerController : MonoBehaviour
 {
     public SpeedState speedState;
     public Transform shipMesh;
-    public Transform ShipRotate;
+    public Transform rayOrigin;
+    public GameObject AimerCubeTest;
     public float engineMomentum;
     public float maxEngineMomentum;
     [SerializeField] private float speedLerp;
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     Transform mT;
 
+    [SerializeField] float rayDistance = 500;
     private void Awake()
     {
         mT = transform;
@@ -47,6 +49,12 @@ public class PlayerController : MonoBehaviour
     {
         ForwardMomentum(speedState);
         ShipDirection(inputTurn, inputPitch);
+        
+    }
+
+    private void Update()
+    {
+        Aimer();
     }
 
     private void ForwardMomentum(SpeedState speedState)
@@ -68,7 +76,6 @@ public class PlayerController : MonoBehaviour
         yaw = inputH * turnSpeed;
         pitch = inputV * pitchSpeed;
         roll = inputH * rotateSpeed;
-
 
         float lerpPitch = Mathf.LerpAngle(mT.rotation.x, pitch, smoothPitch);
         float lerpYaw = Mathf.LerpAngle(mT.rotation.y, yaw, smoothYaw);
@@ -96,6 +103,22 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void Aimer()
+    {
+        Ray ray = new Ray(rayOrigin.position, transform.forward);
+        RaycastHit hitInfo;
 
+        if (Physics.Raycast(ray, out hitInfo, rayDistance))
+        {
+            Debug.DrawLine(ray.origin, hitInfo.point, Color.red);
+        }
+        else
+        {
+            Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.green);
+        }
+
+        AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
+        
+    }
 
 }

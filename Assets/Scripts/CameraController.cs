@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
 
         //transform.position.x = Mathf.Lerp(transform.position.x, shipMover.transform.position.x, positionLerp);
 
-        transform.position = new Vector3(Mathf.Lerp(transform.position.x, shipMover.transform.position.x, positionLerp), Mathf.Lerp(transform.position.y, shipMover.transform.position.y, positionLerp), shipMover.position.z); 
+        transform.position = new Vector3(Mathf.Lerp(transform.localPosition.x, shipMover.localPosition.x, positionLerp), Mathf.Lerp(transform.localPosition.y, shipMover.localPosition.y, positionLerp), shipMover.position.z); 
         transform.rotation = Quaternion.Lerp(transform.rotation, shipMover.transform.rotation, rotationLerp);
     }
 

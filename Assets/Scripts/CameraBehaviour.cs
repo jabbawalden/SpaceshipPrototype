@@ -29,7 +29,6 @@ public class CameraBehaviour : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate() 
     {
-        print(transform.localPosition);
         CameraStates();
     }
 
