@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum SpeedState {normal, boost}
+
 public class PlayerController : MonoBehaviour
 {
+    public SpeedState speedState;
     public Transform shipMesh;
     public Transform ShipRotate;
     public float engineMomentum;
     public float maxEngineMomentum;
+    [SerializeField] private float speedLerp;
 
     public float inputTurn;
     public float inputPitch;
@@ -41,14 +45,22 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate() 
     {
-        ForwardMomentum();
+        ForwardMomentum(speedState);
         ShipDirection(inputTurn, inputPitch);
     }
 
-    private void ForwardMomentum()
+    private void ForwardMomentum(SpeedState speedState)
     {
         rb.velocity = transform.forward * engineMomentum;
 
+        if (speedState == SpeedState.normal)
+        {
+            engineMomentum = Mathf.Lerp(engineMomentum, maxEngineMomentum / 2, speedLerp);
+        }
+        else if (speedState == SpeedState.boost)
+        {
+            engineMomentum = Mathf.Lerp(engineMomentum, maxEngineMomentum, speedLerp);
+        }
     }
 
     private void ShipDirection(float inputH, float inputV)

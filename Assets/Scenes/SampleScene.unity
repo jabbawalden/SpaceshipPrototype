@@ -3085,6 +3085,7 @@ GameObject:
   - component: {fileID: 534669905}
   - component: {fileID: 534669904}
   - component: {fileID: 534669903}
+  - component: {fileID: 534669906}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3150,12 +3151,33 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -8}
+  m_LocalPosition: {x: 0, y: 1, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1236147125}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &534669906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534669902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8509e77c1e3d264283ec19028ea0f59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camFOVLerp: 0.05
+  camOffsetLerp: 0.04
+  camDefaultOffsetZ: -6
+  camBoostOffsetZ: -4
+  playerController: {fileID: 1242758136}
+  cam: {fileID: 534669904}
+  defaultFOV: 66
+  boostFOV: 88
+  currentFOV: 0
 --- !u!1 &540358090
 GameObject:
   m_ObjectHideFlags: 0
@@ -7649,10 +7671,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 047416a39c1812748b546d6170dac1ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speedState: 0
   shipMesh: {fileID: 564257654}
   ShipRotate: {fileID: 0}
   engineMomentum: 0
   maxEngineMomentum: 60
+  speedLerp: 0.1
   inputTurn: 0
   inputPitch: 0
   roll: 0
@@ -7692,11 +7716,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f62153f720dd224583383ce3bf26a67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedUpSmooth: 2.5
   camFOVSmooth: 2
   cam: {fileID: 534669904}
   defaultFOV: 66
-  boostFOV: 85
+  boostFOV: 90
   currentFOV: 0
 --- !u!114 &1242758139
 MonoBehaviour:
@@ -8488,7 +8511,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shipMover: {fileID: 1242758135}
-  smoothLerp: 0.1
+  positionLerp: 0.45
+  rotationLerp: 0.1
 --- !u!1 &1390050646
 GameObject:
   m_ObjectHideFlags: 0

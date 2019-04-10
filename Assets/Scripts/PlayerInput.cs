@@ -7,7 +7,6 @@ public class PlayerInput : MonoBehaviour
     private PlayerController playerController;
     private PlayerShoot playerShoot;
 
-    [SerializeField] float speedUpSmooth;
     [SerializeField] float camFOVSmooth;
 
     [SerializeField] private Camera cam;
@@ -20,8 +19,6 @@ public class PlayerInput : MonoBehaviour
     {
         playerController = GetComponent<PlayerController>();
         playerShoot = GetComponent<PlayerShoot>();
-        currentFOV = defaultFOV;
-        cam.fieldOfView = currentFOV;
     }
 
     // Update is called once per frame
@@ -31,20 +28,15 @@ public class PlayerInput : MonoBehaviour
         float v = Input.GetAxis("Vertical");
 
         playerController.inputTurn = h;
-        playerController.inputPitch = v; 
+        playerController.inputPitch = v;
 
         if (Input.GetKey(KeyCode.Space))
         {
-            playerController.engineMomentum = Mathf.Lerp(playerController.engineMomentum, playerController.maxEngineMomentum, speedUpSmooth * Time.deltaTime);
-            currentFOV = Mathf.Lerp(currentFOV, boostFOV, camFOVSmooth * Time.deltaTime);
-            cam.fieldOfView = currentFOV;
+            playerController.speedState = SpeedState.boost;
         }
         else 
         {
-            playerController.engineMomentum = Mathf.Lerp(playerController.engineMomentum, playerController.maxEngineMomentum / 2, speedUpSmooth * Time.deltaTime);
-            currentFOV = Mathf.Lerp(currentFOV, defaultFOV, camFOVSmooth * Time.deltaTime);
-            cam.fieldOfView = currentFOV;
-            //move camera closer - so set initial z length and new z length when speeding, then Mathf.Lerp between them using camFOVSmooth
+            playerController.speedState = SpeedState.normal;
         }
 
         if (Input.GetKeyDown(KeyCode.K))
