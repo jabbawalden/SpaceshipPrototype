@@ -9,6 +9,7 @@ public class ProjectileBehaviour : MonoBehaviour
     public float newSpeed;
     Rigidbody rb;
     private GameObject playerShip;
+    public float damage;
 
     private void Awake()
     {
@@ -24,6 +25,12 @@ public class ProjectileBehaviour : MonoBehaviour
     void DestroyObject()
     {
         Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+            Destroy(other.gameObject);
     }
     /*
     private void Start()

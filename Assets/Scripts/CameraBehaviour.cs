@@ -14,6 +14,7 @@ public class CameraBehaviour : MonoBehaviour
     [SerializeField] private PlayerController playerController;
 
     [SerializeField] private Camera cam;
+    [SerializeField] private Transform camHolder;
     [SerializeField] private float defaultFOV;
     [SerializeField] private float boostFOV;
     [SerializeField] private float currentFOV;
@@ -22,7 +23,7 @@ public class CameraBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, camDefaultOffsetZ);
+        camHolder.localPosition = new Vector3(camHolder.localPosition.x, camHolder.localPosition.y, camDefaultOffsetZ);
         cam.fieldOfView = defaultFOV;
     }
 
@@ -37,12 +38,12 @@ public class CameraBehaviour : MonoBehaviour
         if (playerController.speedState == SpeedState.normal)
         {
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, defaultFOV, camFOVLerp);
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, Mathf.Lerp(transform.localPosition.z, camDefaultOffsetZ, camOffsetLerp));
+            camHolder.localPosition = new Vector3(camHolder.localPosition.x, camHolder.localPosition.y, Mathf.Lerp(camHolder.localPosition.z, camDefaultOffsetZ, camOffsetLerp));
         }
         else if (playerController.speedState == SpeedState.boost)
         {
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, boostFOV, camFOVLerp);
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, Mathf.Lerp(transform.localPosition.z, camBoostOffsetZ, camOffsetLerp));
+            camHolder.localPosition = new Vector3(camHolder.localPosition.x, camHolder.localPosition.y, Mathf.Lerp(camHolder.localPosition.z, camBoostOffsetZ, camOffsetLerp));
         }
     }
 

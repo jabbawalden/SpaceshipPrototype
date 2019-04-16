@@ -12,14 +12,17 @@ public class PlayerController : MonoBehaviour
     public GameObject AimerCubeTest;
     public float engineMomentum;
     public float maxEngineMomentum;
+    public float boostEngineMomentum;
     [SerializeField] private float speedLerp;
 
     public float inputTurn;
     public float inputPitch;
+    public float inputRoll;
 
-    public float roll; 
-    public float yaw;
-    public float pitch;
+    [SerializeField] private float roll;
+    [SerializeField] private float yaw;
+    [SerializeField] private float pitch; 
+    [SerializeField] private float mainRoll;
 
     public float turnSpeed;
     public float rotateSpeed;
@@ -34,6 +37,7 @@ public class PlayerController : MonoBehaviour
     Transform mT;
 
     [SerializeField] float rayDistance = 500;
+
     private void Awake()
     {
         mT = transform;
@@ -42,13 +46,14 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        engineMomentum = maxEngineMomentum / 2;
+        //default engine start
+        engineMomentum = maxEngineMomentum * 0.75f;
     }
 
     void FixedUpdate() 
     {
         ForwardMomentum(speedState);
-        ShipDirection(inputTurn, inputPitch);
+        ShipDirection(inputTurn, inputPitch, inputRoll);
         
     }
 
@@ -63,23 +68,30 @@ public class PlayerController : MonoBehaviour
 
         if (speedState == SpeedState.normal)
         {
-            engineMomentum = Mathf.Lerp(engineMomentum, maxEngineMomentum / 2, speedLerp);
+            engineMomentum = Mathf.Lerp(engineMomentum, maxEngineMomentum, speedLerp);
         }
         else if (speedState == SpeedState.boost)
         {
-            engineMomentum = Mathf.Lerp(engineMomentum, maxEngineMomentum, speedLerp);
+            engineMomentum = Mathf.Lerp(engineMomentum, boostEngineMomentum, speedLerp);
         }
     }
 
-    private void ShipDirection(float inputH, float inputV)
+    public void ChangeMomentum(float newValue)
+    {
+
+    }
+
+    private void ShipDirection(float inputH, float inputV, float inputR)
     {
         yaw = inputH * turnSpeed;
         pitch = inputV * pitchSpeed;
         roll = inputH * rotateSpeed;
+        mainRoll = inputR * rotateSpeed;
 
-        float lerpPitch = Mathf.LerpAngle(mT.rotation.x, pitch, smoothPitch);
-        float lerpYaw = Mathf.LerpAngle(mT.rotation.y, yaw, smoothYaw);
+        float lerpPitch = Mathf.LerpAngle(mT.rotation.x, pitch, smoothPitch); 
+        float lerpYaw = Mathf.LerpAngle(transform.rotation.y, yaw, smoothYaw);
         float lerpRoll = Mathf.LerpAngle(mT.rotation.z, roll, smoothRoll);
+        float lerpMainRoll = Mathf.LerpAngle(mT.rotation.z, mainRoll, smoothRoll);
 
         shipMesh.localRotation = Quaternion.Euler(shipMesh.localRotation.x, shipMesh.localRotation.y, -lerpRoll);
 
@@ -101,6 +113,16 @@ public class PlayerController : MonoBehaviour
             mT.Rotate(0, 0, 0);
         }
 
+        
+        if (inputR != 0)
+        {
+            mT.Rotate(0, 0, lerpMainRoll);
+        }
+        else
+        {
+            mT.Rotate(0, 0, 0);
+        }
+        
     }
 
     public void Aimer()
@@ -110,11 +132,11 @@ public class PlayerController : MonoBehaviour
 
         if (Physics.Raycast(ray, out hitInfo, rayDistance))
         {
-            Debug.DrawLine(ray.origin, hitInfo.point, Color.red);
+            //Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 2);
         }
         else
         {
-            Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.green);
+            //Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.green, 2);
         }
 
         AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
