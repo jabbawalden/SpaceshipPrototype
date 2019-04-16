@@ -11,9 +11,11 @@ public class PlayerController : MonoBehaviour
     public Transform rayOrigin;
     public GameObject AimerCubeTest;
     public float engineMomentum;
+    public float currentEngineMomentum;
     public float maxEngineMomentum;
     public float boostEngineMomentum;
     [SerializeField] private float speedLerp;
+    [SerializeField] private float engineMomentumChangeLerp;
 
     public float inputTurn;
     public float inputPitch;
@@ -48,6 +50,7 @@ public class PlayerController : MonoBehaviour
     {
         //default engine start
         engineMomentum = maxEngineMomentum * 0.75f;
+        currentEngineMomentum = maxEngineMomentum * 0.75f;
     }
 
     void FixedUpdate() 
@@ -68,7 +71,7 @@ public class PlayerController : MonoBehaviour
 
         if (speedState == SpeedState.normal)
         {
-            engineMomentum = Mathf.Lerp(engineMomentum, maxEngineMomentum, speedLerp);
+            engineMomentum = Mathf.Lerp(engineMomentum, currentEngineMomentum, speedLerp);
         }
         else if (speedState == SpeedState.boost)
         {
@@ -78,7 +81,32 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeMomentum(float newValue)
     {
+        if (speedState == SpeedState.normal)
+        {
+            if (currentEngineMomentum >= 0 && currentEngineMomentum < maxEngineMomentum)
+            {
+                currentEngineMomentum = Mathf.Lerp(currentEngineMomentum, currentEngineMomentum += newValue, engineMomentumChangeLerp);
+            }
+            else if (currentEngineMomentum >= maxEngineMomentum)
+            {
+                currentEngineMomentum = maxEngineMomentum - 1;
+            }
+            else if (currentEngineMomentum <= 0)
+            {
+                currentEngineMomentum = 0.5f;
+            }
+        }
 
+        /*
+        if (currentEngineMomentum > 0 && currentEngineMomentum < maxEngineMomentum)
+        {
+            engineMomentum = Mathf.Lerp(currentEngineMomentum, currentEngineMomentum += newValue, engineMomentumChangeLerp);
+        }
+        else if (currentEngineMomentum > maxEngineMomentum)
+            currentEngineMomentum = maxEngineMomentum;
+        else if (currentEngineMomentum < 0)
+            currentEngineMomentum = 0;
+            */
     }
 
     private void ShipDirection(float inputH, float inputV, float inputR)

@@ -34,6 +34,7 @@ public class PlayerInput : MonoBehaviour
     {
         //input functions called
         ShipMovementBasicInput();
+        ShipSpeedControlInput();
         ShipBoostInput();
         ShipShootInput();
         CameraFollowInput();
@@ -69,6 +70,9 @@ public class PlayerInput : MonoBehaviour
     private void ShipSpeedControlInput()
     {
         print(Input.mouseScrollDelta);
+
+        if (Input.mouseScrollDelta.y != 0)
+            playerController.ChangeMomentum(Input.mouseScrollDelta.y * 15);
     }
 
     private void ShipBoostInput()
@@ -120,8 +124,6 @@ public class PlayerInput : MonoBehaviour
             v = Mathf.Lerp(h, mousePos.y, yLerp);
         else
             v = Mathf.Lerp(h, 0, yLerp);
-
-        print(mousePos);
 
         camFollowMouse.inputTurn = h;
         camFollowMouse.inputPitch = -v;

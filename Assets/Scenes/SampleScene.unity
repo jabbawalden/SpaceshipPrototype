@@ -4372,6 +4372,7 @@ MonoBehaviour:
   maxEngineMomentum: 35
   boostEngineMomentum: 65
   speedLerp: 0.1
+  engineMomentumChangeLerp: 0.1
   inputTurn: 0
   inputPitch: 0
   inputRoll: 0

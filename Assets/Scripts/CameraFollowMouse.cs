@@ -40,6 +40,7 @@ public class CameraFollowMouse : MonoBehaviour
         float lerpOPitch = Mathf.LerpAngle(mT.localRotation.x, 0, pitchSmooth);
         float lerpOYaw = Mathf.LerpAngle(mT.localRotation.y, 0, turnSmooth);
 
+        /*
         if (inputH != 0 || inputV != 0)
         {
             //mT.Rotate(0, yaw, 0);
@@ -49,6 +50,8 @@ public class CameraFollowMouse : MonoBehaviour
         {
             mT.localRotation = Quaternion.Euler(lerpOPitch, lerpOYaw, mT.localRotation.z);
         }
+        */
+
 
         /*
         if (inputH != 0)
