@@ -50,9 +50,10 @@ public class PlayerInput : MonoBehaviour
     private void ShipMovementBasicInput()
     {        
         
-        //old method using WASD
+        //Left joystick moves yaw and pitch(inverted)
         float hKey = Input.GetAxis("Horizontal");
         float vKey = Input.GetAxis("Vertical");
+        //Right joystick moves roll and pitch(normal)
         float rKey = Input.GetAxis("Horizontal1");
         float sKey = Input.GetAxis("Vertical1");
         //need input for rolling
