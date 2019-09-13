@@ -49,10 +49,10 @@ public class PlayerInput : MonoBehaviour
 
     private void ShipMovementBasicInput()
     {        
-        
         //Left joystick moves yaw and pitch(inverted)
         float hKey = Input.GetAxis("Horizontal");
         float vKey = Input.GetAxis("Vertical");
+
         //Right joystick moves roll and pitch(normal)
         float rKey = Input.GetAxis("Horizontal1");
         float sKey = Input.GetAxis("Vertical1");
@@ -99,6 +99,7 @@ public class PlayerInput : MonoBehaviour
         Ray ray = new Ray (shootDirection.transform.position, shootDirection.transform.forward);
         //Debug.DrawRay(cam.transform.position, ray.direction * 1000, Color.red, 2);
 
+        ///below was intended for rotating the shoot direction object so that player could aim while moving at the same time.
         //float rightJoyH = Input.GetAxis("Horizontal1");
         //float rightJoyV = Input.GetAxis("Vertical1");
         //print(rightJoyH);
