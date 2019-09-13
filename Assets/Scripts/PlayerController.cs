@@ -21,10 +21,10 @@ public class PlayerController : MonoBehaviour
     public float inputPitch;
     public float inputRoll;
 
-    [SerializeField] private float roll;
+    [SerializeField] private float rollMesh;
+    [SerializeField] private float rollShip;
     [SerializeField] private float yaw;
     [SerializeField] private float pitch; 
-    [SerializeField] private float mainRoll;
 
     public float turnSpeed;
     public float rotateSpeed;
@@ -107,20 +107,24 @@ public class PlayerController : MonoBehaviour
 
     private void ShipDirection(float inputH, float inputV, float inputR)
     {
+
+
+
         yaw = inputH * turnSpeed;
         pitch = inputV * pitchSpeed;
-        roll = inputH * rotateSpeed;
+        rollMesh = inputH * rotateSpeed;
+        rollShip = inputR * rotateSpeed;
 
-        lerpValue = Mathf.Lerp(current, -roll, smoothTime);
+        
+        lerpValue = Mathf.Lerp(current, -rollMesh, smoothTime);
         current = lerpValue;
         shipMesh.localRotation = Quaternion.Euler(shipMesh.localRotation.x, shipMesh.localRotation.y, current);
 
         float lerpPitch = Mathf.LerpAngle(mT.rotation.x, pitch, smoothPitch);
         float lerpYaw = Mathf.LerpAngle(transform.rotation.y, yaw, smoothYaw);
-
-
-
-
+        float lerpRoll = Mathf.LerpAngle(mT.rotation.z, rollShip, smoothTime);
+        
+        
         if (inputH != 0)
         {
             mT.Rotate(0, lerpYaw, 0);
@@ -139,6 +143,17 @@ public class PlayerController : MonoBehaviour
             mT.Rotate(0, 0, 0);
         }
 
+
+        if (inputR != 0)
+        {
+            mT.Rotate(0, 0, lerpRoll);
+
+        }
+        else
+        {
+            mT.Rotate(0, 0, 0);
+        }
+        
     }
 
     public void Aimer()

@@ -53,10 +53,21 @@ public class PlayerInput : MonoBehaviour
         //old method using WASD
         float hKey = Input.GetAxis("Horizontal");
         float vKey = Input.GetAxis("Vertical");
+        float rKey = Input.GetAxis("Horizontal1");
+        float sKey = Input.GetAxis("Vertical1");
+        //need input for rolling
 
         playerController.inputTurn = hKey;
-        playerController.inputPitch = vKey;
+        if (vKey != 0)
+        {
+            playerController.inputPitch = vKey;
+        }
+        else
+        {
+            playerController.inputPitch = sKey;
+        }
 
+        playerController.inputRoll = rKey;
     }
 
     private void ShipSpeedControlInput()
@@ -87,20 +98,20 @@ public class PlayerInput : MonoBehaviour
         Ray ray = new Ray (shootDirection.transform.position, shootDirection.transform.forward);
         //Debug.DrawRay(cam.transform.position, ray.direction * 1000, Color.red, 2);
 
-        float rightJoyH = Input.GetAxis("Horizontal1");
-        float rightJoyV = Input.GetAxis("Vertical1");
-        print(rightJoyH);
-        print(rightJoyV);
+        //float rightJoyH = Input.GetAxis("Horizontal1");
+        //float rightJoyV = Input.GetAxis("Vertical1");
+        //print(rightJoyH);
+        //print(rightJoyV);
 
-        float rotH = rightJoyH * rotateDestination;
-        float rotV = rightJoyV * rotateDestination;
-        lerpValueH = Mathf.Lerp(currentH, rotH, smoothTime);
-        lerpValueV = Mathf.Lerp(currentV, rotV, smoothTime);
+        //float rotH = rightJoyH * rotateDestination;
+        //float rotV = rightJoyV * rotateDestination;
+        //lerpValueH = Mathf.Lerp(currentH, rotH, smoothTime);
+        //lerpValueV = Mathf.Lerp(currentV, rotV, smoothTime);
 
-        currentH = lerpValueH;
-        currentV = lerpValueV;
+        //currentH = lerpValueH;
+        //currentV = lerpValueV;
 
-        shootDirection.transform.localRotation = Quaternion.Euler(-rotV, rotH + 90, 0);
+        //shootDirection.transform.localRotation = Quaternion.Euler(-rotV, rotH + 90, 0);
 
         if (Input.GetKey(KeyCode.Mouse0))
         {
