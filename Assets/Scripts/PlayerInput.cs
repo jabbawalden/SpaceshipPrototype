@@ -7,6 +7,7 @@ public class PlayerInput : MonoBehaviour
     private PlayerController playerController;
     private PlayerShoot playerShoot;
     private CameraFollowMouse camFollowMouse;
+    public GameObject shootDirection;
 
     [SerializeField] Camera cam;
     [SerializeField] private float defaultFOV;
@@ -18,8 +19,14 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private float yLerp;
     [SerializeField] private float zLerp;
     [SerializeField] private float xDivider;
-    [SerializeField] private float yDivider; 
+    [SerializeField] private float yDivider;
 
+    public float currentH;
+    public float currentV;
+    public float lerpValueH;
+    public float lerpValueV;
+    public float smoothTime;
+    public float rotateDestination; 
     private void Awake()
     {
         playerController = GetComponent<PlayerController>();
@@ -50,26 +57,11 @@ public class PlayerInput : MonoBehaviour
         playerController.inputTurn = hKey;
         playerController.inputPitch = vKey;
 
-        if (Input.GetKey(KeyCode.Q))
-        {
-            playerController.inputRoll = Mathf.Lerp(playerController.inputRoll, 0.08f, zLerp);
-            print("Q");
-        }
-        else if ((Input.GetKey(KeyCode.E)))
-        {
-            playerController.inputRoll = Mathf.Lerp(playerController.inputRoll, -0.08f, zLerp);
-            print("E");
-        }
-        else
-        {
-            playerController.inputRoll = Mathf.Lerp(playerController.inputRoll, 0, 5);
-        }
-
     }
 
     private void ShipSpeedControlInput()
     {
-        print(Input.mouseScrollDelta);
+        //print(Input.mouseScrollDelta);
 
         if (Input.mouseScrollDelta.y != 0)
             playerController.ChangeMomentum(Input.mouseScrollDelta.y * 15);
@@ -91,10 +83,31 @@ public class PlayerInput : MonoBehaviour
     private void ShipShootInput()
     {
 
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        //Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = new Ray (shootDirection.transform.position, shootDirection.transform.forward);
         //Debug.DrawRay(cam.transform.position, ray.direction * 1000, Color.red, 2);
 
+        float rightJoyH = Input.GetAxis("Horizontal1");
+        float rightJoyV = Input.GetAxis("Vertical1");
+        print(rightJoyH);
+        print(rightJoyV);
+
+        float rotH = rightJoyH * rotateDestination;
+        float rotV = rightJoyV * rotateDestination;
+        lerpValueH = Mathf.Lerp(currentH, rotH, smoothTime);
+        lerpValueV = Mathf.Lerp(currentV, rotV, smoothTime);
+
+        currentH = lerpValueH;
+        currentV = lerpValueV;
+
+        shootDirection.transform.localRotation = Quaternion.Euler(-rotV, rotH + 90, 0);
+
         if (Input.GetKey(KeyCode.Mouse0))
+        {
+            playerShoot.ShootProjectile(playerController.engineMomentum, ray.direction);
+        }
+
+        if (Input.GetAxis("Fire1") != 0)
         {
             playerShoot.ShootProjectile(playerController.engineMomentum, ray.direction);
         }

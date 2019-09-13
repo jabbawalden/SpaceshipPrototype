@@ -40,6 +40,12 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] float rayDistance = 500;
 
+
+    public float current;
+    public float lerpValue;
+    public float smoothTime;
+    bool haveStoppedInput;
+
     private void Awake()
     {
         mT = transform;
@@ -57,13 +63,13 @@ public class PlayerController : MonoBehaviour
     {
         ForwardMomentum(speedState);
         ShipDirection(inputTurn, inputPitch, inputRoll);
-        
     }
 
     private void Update()
     {
         Aimer();
     }
+
 
     private void ForwardMomentum(SpeedState speedState)
     {
@@ -97,16 +103,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        /*
-        if (currentEngineMomentum > 0 && currentEngineMomentum < maxEngineMomentum)
-        {
-            engineMomentum = Mathf.Lerp(currentEngineMomentum, currentEngineMomentum += newValue, engineMomentumChangeLerp);
-        }
-        else if (currentEngineMomentum > maxEngineMomentum)
-            currentEngineMomentum = maxEngineMomentum;
-        else if (currentEngineMomentum < 0)
-            currentEngineMomentum = 0;
-            */
     }
 
     private void ShipDirection(float inputH, float inputV, float inputR)
@@ -114,14 +110,16 @@ public class PlayerController : MonoBehaviour
         yaw = inputH * turnSpeed;
         pitch = inputV * pitchSpeed;
         roll = inputH * rotateSpeed;
-        mainRoll = inputR * rotateSpeed;
 
-        float lerpPitch = Mathf.LerpAngle(mT.rotation.x, pitch, smoothPitch); 
+        lerpValue = Mathf.Lerp(current, -roll, smoothTime);
+        current = lerpValue;
+        shipMesh.localRotation = Quaternion.Euler(shipMesh.localRotation.x, shipMesh.localRotation.y, current);
+
+        float lerpPitch = Mathf.LerpAngle(mT.rotation.x, pitch, smoothPitch);
         float lerpYaw = Mathf.LerpAngle(transform.rotation.y, yaw, smoothYaw);
-        float lerpRoll = Mathf.LerpAngle(mT.rotation.z, roll, smoothRoll);
-        float lerpMainRoll = Mathf.LerpAngle(mT.rotation.z, mainRoll, smoothRoll);
 
-        shipMesh.localRotation = Quaternion.Euler(shipMesh.localRotation.x, shipMesh.localRotation.y, -lerpRoll);
+
+
 
         if (inputH != 0)
         {
@@ -141,16 +139,6 @@ public class PlayerController : MonoBehaviour
             mT.Rotate(0, 0, 0);
         }
 
-        
-        if (inputR != 0)
-        {
-            mT.Rotate(0, 0, lerpMainRoll);
-        }
-        else
-        {
-            mT.Rotate(0, 0, 0);
-        }
-        
     }
 
     public void Aimer()

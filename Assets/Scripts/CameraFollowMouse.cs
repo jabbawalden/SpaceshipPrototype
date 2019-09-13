@@ -40,20 +40,20 @@ public class CameraFollowMouse : MonoBehaviour
         float lerpOPitch = Mathf.LerpAngle(mT.localRotation.x, 0, pitchSmooth);
         float lerpOYaw = Mathf.LerpAngle(mT.localRotation.y, 0, turnSmooth);
 
-        /*
-        if (inputH != 0 || inputV != 0)
-        {
-            //mT.Rotate(0, yaw, 0);
-            mT.localRotation = Quaternion.Euler(lerpPitch, lerpYaw, mT.localRotation.z);
-        }
-        else
-        {
-            mT.localRotation = Quaternion.Euler(lerpOPitch, lerpOYaw, mT.localRotation.z);
-        }
-        */
+
+        //if (inputH != 0 || inputV != 0)
+        //{
+        //    //mT.Rotate(0, yaw, 0);
+        //    mT.localRotation = Quaternion.Euler(lerpPitch, lerpYaw, mT.localRotation.z);
+        //}
+        //else
+        //{
+        //    mT.localRotation = Quaternion.Euler(lerpOPitch, lerpOYaw, mT.localRotation.z);
+        //}
 
 
-        /*
+
+
         if (inputH != 0)
         {
             //mT.Rotate(0, yaw, 0);
@@ -63,8 +63,8 @@ public class CameraFollowMouse : MonoBehaviour
         {
             mT.localRotation = Quaternion.Euler(mT.rotation.x, lerpOYaw, mT.localRotation.z);
         }
-        
-        
+
+
         if (inputV != 0)
         {
             //mT.Rotate(pitch, 0, 0);
@@ -74,7 +74,7 @@ public class CameraFollowMouse : MonoBehaviour
         {
             //mT.Rotate(0, 0, 0);
             mT.localRotation = Quaternion.Euler(lerpOPitch, mT.rotation.y, mT.localRotation.z);
-        }*/
+        }
     }
     
 

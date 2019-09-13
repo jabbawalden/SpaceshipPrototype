@@ -29,15 +29,18 @@ public class PlayerShoot : MonoBehaviour
         {
             newTime = Time.time + fireRate;
 
-            GameObject obj = Instantiate(projectile, origin1.position, Quaternion.identity);
+            GameObject obj1 = Instantiate(projectile, origin1.position, Quaternion.identity);
+            GameObject obj2 = Instantiate(projectile, origin1.position, Quaternion.identity);
+
             //vector3 is world space, use transform forward instead to get objects forward rotation
             //direction = transform.forward;
             float newSpeed = projSpeed + shipMomentum;
 
-            obj.GetComponent<Rigidbody>().velocity = direction * newSpeed * Time.deltaTime;
-            obj.transform.rotation = Quaternion.LookRotation(transform.forward);
+            obj1.GetComponent<Rigidbody>().velocity = direction * newSpeed * Time.deltaTime;
+            obj1.transform.rotation = Quaternion.LookRotation(transform.forward);
+            obj2.GetComponent<Rigidbody>().velocity = direction * newSpeed * Time.deltaTime;
+            obj2.transform.rotation = Quaternion.LookRotation(transform.forward);
 
-            print("Shot fired");
         }
       
     }
