@@ -30,7 +30,8 @@ public class CameraBehaviour : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate() 
     {
-        CameraStates();
+        if (playerController.alive)
+            CameraStates();
     }
 
     void CameraStates()

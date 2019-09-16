@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 2652336315020387772}
   - component: {fileID: 2652336315020387775}
   - component: {fileID: 2652336315020387774}
-  - component: {fileID: 2652336315020387761}
   - component: {fileID: 2652336315020387760}
   - component: {fileID: 2652336315020387773}
+  - component: {fileID: 8786865905762550125}
   m_Layer: 0
-  m_Name: Projectile
+  m_Name: ProjectilePlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 2652336315020387763}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0.0476, y: -0.44, z: -280.5609}
-  m_LocalScale: {x: 0.23618688, y: 0.1727203, z: 1.2724332}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 6778324811721899805}
   m_Father: {fileID: 0}
@@ -81,20 +81,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &2652336315020387761
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2652336315020387763}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.15
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2652336315020387760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,6 +96,8 @@ MonoBehaviour:
   projectileSpeed: 20
   currentMomentum: 30
   newSpeed: 0
+  damage: 0
+  targetLayer: 10
 --- !u!54 &2652336315020387773
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -126,6 +114,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!135 &8786865905762550125
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2652336315020387763}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5521845299699243200
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,7 +154,7 @@ Transform:
   m_GameObject: {fileID: 5521845299699243200}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -0.000000015773, y: 0, z: 0}
-  m_LocalScale: {x: 1.6298892, y: 0.30253735, z: 2.2287972}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2652336315020387772}
   m_RootOrder: 0

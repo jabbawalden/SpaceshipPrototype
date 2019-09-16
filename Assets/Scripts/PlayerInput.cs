@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -26,7 +27,8 @@ public class PlayerInput : MonoBehaviour
     public float lerpValueH;
     public float lerpValueV;
     public float smoothTime;
-    public float rotateDestination; 
+    public float rotateDestination;
+
     private void Awake()
     {
         playerController = GetComponent<PlayerController>();
@@ -45,6 +47,24 @@ public class PlayerInput : MonoBehaviour
         ShipBoostInput();
         ShipShootInput();
         CameraFollowInput();
+        RestartButton();
+    }
+
+    private void RestartButton()
+    {
+
+        if (Input.GetKeyDown("joystick button 7"))
+        {
+            print("Start Pressed");
+            SceneManager.LoadScene(0);
+        }
+
+
+        //if (sKey != 0)
+        //{
+        //    print("Start Pressed");
+        //    SceneManager.LoadScene(0);
+        //}
     }
 
     private void ShipMovementBasicInput()
@@ -55,20 +75,21 @@ public class PlayerInput : MonoBehaviour
 
         //Right joystick moves roll and pitch(normal)
         float rKey = Input.GetAxis("Horizontal1");
-        float sKey = Input.GetAxis("Vertical1");
+        float vKey2 = Input.GetAxis("Vertical1");
         //need input for rolling
 
-        playerController.inputTurn = hKey;
         if (vKey != 0)
         {
             playerController.inputPitch = vKey;
         }
         else
         {
-            playerController.inputPitch = sKey;
+            playerController.inputPitch = vKey2;
         }
 
+        playerController.inputTurn = hKey;
         playerController.inputRoll = rKey;
+
     }
 
     private void ShipSpeedControlInput()
@@ -82,7 +103,9 @@ public class PlayerInput : MonoBehaviour
     private void ShipBoostInput()
     {
         //set ship state to control behaviour
-        if (Input.GetKey(KeyCode.LeftShift))
+        float bKey = Input.GetAxis("Boost");
+
+        if (bKey != 0)
         {
             playerController.speedState = SpeedState.boost;
         }
@@ -114,12 +137,12 @@ public class PlayerInput : MonoBehaviour
         //currentV = lerpValueV;
 
         //shootDirection.transform.localRotation = Quaternion.Euler(-rotV, rotH + 90, 0);
-
+        /*
         if (Input.GetKey(KeyCode.Mouse0))
         {
             playerShoot.ShootProjectile(playerController.engineMomentum, ray.direction);
         }
-
+        */
         if (Input.GetAxis("Fire1") != 0)
         {
             playerShoot.ShootProjectile(playerController.engineMomentum, ray.direction);

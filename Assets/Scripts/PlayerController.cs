@@ -46,10 +46,19 @@ public class PlayerController : MonoBehaviour
     public float smoothTime;
     bool haveStoppedInput;
 
+    public bool alive;
+    public float health = 3;
+
+    public GameObject shipNormal, shipDestroyed;
+    //public GameObject[] shipParts;
+
     private void Awake()
     {
+        shipDestroyed.SetActive(false);
+        shipNormal.SetActive(true);
+        alive = true;
         mT = transform;
-        rb = GetComponent<Rigidbody>();    
+        rb = GetComponent<Rigidbody>();
     }
 
     void Start()
@@ -61,8 +70,33 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate() 
     {
-        ForwardMomentum(speedState);
-        ShipDirection(inputTurn, inputPitch, inputRoll);
+        if (health > 0)
+        {
+            ForwardMomentum(speedState);
+            ShipDirection(inputTurn, inputPitch, inputRoll);
+        }
+        else
+        {
+            rb.velocity = new Vector3(0, 0, 0);
+
+            if (alive)
+            {
+                alive = false;
+
+                shipDestroyed.SetActive(true);
+                shipNormal.SetActive(false);
+
+                //foreach (GameObject part in shipParts)
+                //{
+                //    if(part.GetComponent<Rigidbody>())
+                //    {
+                //        part.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+                //    }
+                //}
+            }
+
+        }
+
     }
 
     private void Update()
@@ -107,9 +141,6 @@ public class PlayerController : MonoBehaviour
 
     private void ShipDirection(float inputH, float inputV, float inputR)
     {
-
-
-
         yaw = inputH * turnSpeed;
         pitch = inputV * pitchSpeed;
         rollMesh = inputH * rotateSpeed;
