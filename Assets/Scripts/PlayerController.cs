@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum SpeedState {normal, boost}
 
 public class PlayerController : MonoBehaviour
 {
+
+    public Image image;
     public SpeedState speedState;
     public Transform shipMesh;
     public Transform rayOrigin;
@@ -17,14 +20,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speedLerp;
     [SerializeField] private float engineMomentumChangeLerp;
 
-    public float inputTurn;
-    public float inputPitch;
-    public float inputRoll;
+    [System.NonSerialized] public float inputTurn;
+    [System.NonSerialized] public float inputPitch;
+    [System.NonSerialized] public float inputRoll;
 
-    [SerializeField] private float rollMesh;
-    [SerializeField] private float rollShip;
-    [SerializeField] private float yaw;
-    [SerializeField] private float pitch; 
+    private float rollMesh;
+    private float rollShip;
+    private float yaw;
+    private float pitch; 
 
     public float turnSpeed;
     public float rotateSpeed;
@@ -38,22 +41,28 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     Transform mT;
 
-    [SerializeField] float rayDistance = 500;
+    [SerializeField] float rayDistance;
 
 
-    public float current;
-    public float lerpValue;
-    public float smoothTime;
+    private float current;
+    private float lerpValue;
+    [SerializeField] private float smoothTime;
     bool haveStoppedInput;
 
     public bool alive;
     public float health = 3;
+    [SerializeField] private bool sideSpinning;
+    [SerializeField] private float spinSpeed;
+    private float currentSpinSpeed;
+    private float outputSpinSpeed;
 
     public GameObject shipNormal, shipDestroyed;
     //public GameObject[] shipParts;
+    [SerializeField] private Camera cam;
 
     private void Awake()
     {
+        cam = FindObjectOfType<Camera>();
         shipDestroyed.SetActive(false);
         shipNormal.SetActive(true);
         alive = true;
@@ -141,68 +150,101 @@ public class PlayerController : MonoBehaviour
 
     private void ShipDirection(float inputH, float inputV, float inputR)
     {
-        yaw = inputH * turnSpeed;
-        pitch = inputV * pitchSpeed;
-        rollMesh = inputH * rotateSpeed;
-        rollShip = inputR * rotateSpeed;
-
-        
-        lerpValue = Mathf.Lerp(current, -rollMesh, smoothTime);
-        current = lerpValue;
-        shipMesh.localRotation = Quaternion.Euler(shipMesh.localRotation.x, shipMesh.localRotation.y, current);
-
-        float lerpPitch = Mathf.LerpAngle(mT.rotation.x, pitch, smoothPitch);
-        float lerpYaw = Mathf.LerpAngle(transform.rotation.y, yaw, smoothYaw);
-        float lerpRoll = Mathf.LerpAngle(mT.rotation.z, rollShip, smoothTime);
-        
-        
-        if (inputH != 0)
+        if (sideSpinning)
         {
-            mT.Rotate(0, lerpYaw, 0);
+            rb.velocity += transform.right * outputSpinSpeed;
+            //rb.velocity = new Vector3 (rb.velocity.x * outputSpinSpeed, rb.velocity.y, rb.velocity.z);
         }
         else
         {
-            mT.Rotate(0, 0, 0);
-        }
-
-        if (inputV != 0)
-        {
-            mT.Rotate(lerpPitch, 0, 0);
-        }
-        else
-        {
-            mT.Rotate(0, 0, 0);
-        }
+            yaw = inputH * turnSpeed;
+            pitch = inputV * pitchSpeed;
+            rollMesh = inputH * rotateSpeed;
+            rollShip = inputR * rotateSpeed;
 
 
-        if (inputR != 0)
-        {
-            mT.Rotate(0, 0, lerpRoll);
+            lerpValue = Mathf.Lerp(current, -rollMesh, smoothTime);
+            current = lerpValue;
+            shipMesh.localRotation = Quaternion.Euler(shipMesh.localRotation.x, shipMesh.localRotation.y, current);
 
+            float lerpPitch = Mathf.LerpAngle(mT.rotation.x, pitch, smoothPitch);
+            float lerpYaw = Mathf.LerpAngle(transform.rotation.y, yaw, smoothYaw);
+            float lerpRoll = Mathf.LerpAngle(mT.rotation.z, rollShip, smoothTime);
+
+
+            if (inputH != 0)
+            {
+                mT.Rotate(0, lerpYaw, 0);
+            }
+            else
+            {
+                mT.Rotate(0, 0, 0);
+            }
+
+            if (inputV != 0)
+            {
+                mT.Rotate(lerpPitch, 0, 0);
+            }
+            else
+            {
+                mT.Rotate(0, 0, 0);
+            }
+
+
+            if (inputR != 0)
+            {
+                mT.Rotate(0, 0, lerpRoll);
+
+            }
+            else
+            {
+                mT.Rotate(0, 0, 0);
+            }
         }
-        else
-        {
-            mT.Rotate(0, 0, 0);
-        }
-        
     }
 
     public void Aimer()
     {
-        Ray ray = new Ray(rayOrigin.position, transform.forward);
-        RaycastHit hitInfo;
+        //Ray ray = new Ray(rayOrigin.position, transform.forward);
+        //RaycastHit hitInfo;
 
-        if (Physics.Raycast(ray, out hitInfo, rayDistance))
-        {
-            //Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 2);
-        }
-        else
-        {
-            //Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.green, 2);
-        }
+        //Vector3 aimEndPos = transform.forward * rayDistance;
+        //Vector3 crossHairPos = new Vector3(aimEndPos.x, aimEndPos.y, 0);
 
-        AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
-        
+        //image.rectTransform.position = cam.WorldToScreenPoint(new Vector3 (crossHairPos.x, crossHairPos.y, 0));
+
+        //print(cam.WorldToScreenPoint(new Vector3(crossHairPos.x, crossHairPos.y, 0)));
+
+        //if (Physics.Raycast(ray, out hitInfo, rayDistance))
+        //{
+        //    //Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 2);
+        //    image.rectTransform.position = cam.WorldToViewportPoint(hitInfo.point);
+        //    print(cam.WorldToViewportPoint(hitInfo.point));
+        //}
+        //else
+        //{
+        //    //Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.green, 2);
+        //}
+        ////AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
     }
 
+    IEnumerator SideSpin()
+    {
+        sideSpinning = true;
+        yield return new WaitForSeconds(0.35f);
+        sideSpinning = false;
+    }
+
+    public void SpinShip(bool isRight)
+    {
+        if (!sideSpinning)
+        {
+            if (isRight)
+                outputSpinSpeed = -spinSpeed;
+            else
+                outputSpinSpeed = spinSpeed;
+
+            StartCoroutine(SideSpin());
+        }
+    }
 }

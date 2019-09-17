@@ -78,6 +78,10 @@ public class PlayerInput : MonoBehaviour
         float vKey2 = Input.GetAxis("Vertical1");
         //need input for rolling
 
+        playerController.inputPitch += vKey;
+
+
+        /*
         if (vKey != 0)
         {
             playerController.inputPitch = vKey;
@@ -85,11 +89,20 @@ public class PlayerInput : MonoBehaviour
         else
         {
             playerController.inputPitch = vKey2;
-        }
+        }*/
 
         playerController.inputTurn = hKey;
         playerController.inputRoll = rKey;
 
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            playerController.SpinShip(true);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            playerController.SpinShip(false);
+        }
     }
 
     private void ShipSpeedControlInput()

@@ -23,7 +23,7 @@ public class CameraBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        camHolder.localPosition = new Vector3(camHolder.localPosition.x, camHolder.localPosition.y, camDefaultOffsetZ);
+        camHolder.localPosition = new Vector3(camHolder.localPosition.x, camHolder.localPosition.y, camHolder.localPosition.z + camDefaultOffsetZ);
         cam.fieldOfView = defaultFOV;
     }
 

@@ -589,7 +589,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3300404933712347541}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ShipMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -947,7 +947,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3300404934033028974}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RayOrigin
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
@@ -996,7 +996,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3300404934111081276}
   m_LocalRotation: {x: -0, y: 0.043579593, z: -0, w: 0.99904996}
-  m_LocalPosition: {x: 0.29852256, y: 0, z: -0.09689331}
+  m_LocalPosition: {x: -70.21, y: 0, z: -22.85}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3300404934822865852}
@@ -1025,13 +1025,6 @@ MonoBehaviour:
   boostEngineMomentum: 65
   speedLerp: 0.1
   engineMomentumChangeLerp: 0.1
-  inputTurn: 0
-  inputPitch: 0
-  inputRoll: 0
-  rollMesh: 0
-  rollShip: 0
-  yaw: 0
-  pitch: 0
   turnSpeed: 1.7
   rotateSpeed: 50
   pitchSpeed: 1.7
@@ -1044,6 +1037,8 @@ MonoBehaviour:
   smoothTime: 0.06
   alive: 0
   health: 3
+  sideSpinning: 0
+  spinSpeed: 30
   shipNormal: {fileID: 8290772929982771220}
   shipDestroyed: {fileID: 8559356612875351175}
 --- !u!114 &3300404934111081264
@@ -1120,7 +1115,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3300404934261133467}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ShootDirection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1538,7 +1533,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3300404935035459519}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ShootOrigin1
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
@@ -1785,7 +1780,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3300404935525704596}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ShootOrigin2
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
