@@ -114,7 +114,6 @@ public class PlayerController : MonoBehaviour
     {
         Aimer();
         EnergyRegenerate();
-        print(EnergyPercent());
     }
 
     public void EnergyRegenerate()

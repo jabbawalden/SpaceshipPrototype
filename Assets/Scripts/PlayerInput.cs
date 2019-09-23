@@ -31,6 +31,13 @@ public class PlayerInput : MonoBehaviour
     public bool isShooting;
     public bool isBoosting;
 
+    public float hKey;
+    public float vKey;
+
+    //Right joystick moves roll and pitch(normal)
+    public float rKey;
+    public float vKey2;
+
     private void Awake()
     {
         playerController = GetComponent<PlayerController>();
@@ -60,22 +67,17 @@ public class PlayerInput : MonoBehaviour
             SceneManager.LoadScene(0);
         }
 
-        //if (sKey != 0)
-        //{
-        //    print("Start Pressed");
-        //    SceneManager.LoadScene(0);
-        //}
     }
 
     private void ShipMovementBasicInput()
     {        
         //Left joystick moves yaw and pitch(inverted)
-        float hKey = Input.GetAxis("Horizontal");
-        float vKey = Input.GetAxis("Vertical");
+        hKey = Input.GetAxis("Horizontal");
+        vKey = Input.GetAxis("Vertical");
 
         //Right joystick moves roll and pitch(normal)
-        float rKey = Input.GetAxis("Horizontal1");
-        float vKey2 = Input.GetAxis("Vertical1");
+        rKey = Input.GetAxis("Horizontal1");
+        vKey2 = Input.GetAxis("Vertical1");
         //need input for rolling
 
         playerController.inputPitch = vKey;
