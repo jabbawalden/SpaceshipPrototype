@@ -906,6 +906,11 @@ MonoBehaviour:
   - {fileID: 2336371869663871816}
   - {fileID: 5890973512143216618}
   - {fileID: 1313845658918769557}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 8192
+  playerInView: 0
+  target: {fileID: 0}
 --- !u!1 &2297089895573991425
 GameObject:
   m_ObjectHideFlags: 0

@@ -55,24 +55,24 @@ public class ProjectileBehaviour : MonoBehaviour
             if (other.gameObject.GetComponentInParent<EnemyShoot>())
             {
                 other.gameObject.GetComponentInParent<EnemyShoot>().DestroyEnemy();
-                print("Destroy enemy");
+                //print("Destroy enemy");
             }
         }
         else if (other.gameObject.layer == targetLayer && targetLayer == 9)
         {
-            print("Hit Player");
+            //print("Hit Player");
 
             if (targetLayer == 9 && playerController)
             {
                 playerController.health -= 1;
-                print("Player lose health");
+                //print("Player lose health");
                 Destroy(gameObject);
             }
         }
 
         if (other.CompareTag("MainShip"))
         {
-            print("Main Ship");
+            //print("Main Ship");
             Destroy(gameObject);
         }
 

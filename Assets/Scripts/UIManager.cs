@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     private PlayerController playerController;
     private PlayerInput playerInput;
     private PlayerShoot playerShoot;
+    //private GameObject shipMover;
 
     [SerializeField] private Color overHeat;
 
@@ -22,14 +23,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject uiPivots;
     [SerializeField] private float innerRotationDivider;
     [SerializeField] private float outerRotationDivider;
-    [SerializeField] private float uiRotationDivider; 
+    [SerializeField] private float uiPivotMultiplier; 
 
     bool rotateRoll;
     bool haveRotatedRoll;
 
+    float currentLerp;
+    [SerializeField] float lerpTime;
+
     private void Awake()
     {
-
         playerInput = FindObjectOfType<PlayerInput>();
         playerController = FindObjectOfType<PlayerController>();
         playerShoot = FindObjectOfType<PlayerShoot>();
@@ -40,22 +43,45 @@ public class UIManager : MonoBehaviour
     {
         BoostMeter();
         ShootingMeter();
-
-        //print(playerController.shipMesh.localRotation.z);
-
-        //example.transform.DORotate(new Vector3(0, 0, playerController.shipMesh.localRotation.x * 50), 0.5f, RotateMode.LocalAxisAdd);
-        //print(playerController.shipMesh.rotation.x * 50);
-        float rollValue = Mathf.Clamp(playerInput.rKey, -5, 5);
+        //float rollValue = Mathf.Clamp(playerInput.rKey, -5, 5);
 
         Quaternion innerRot = new Quaternion(playerController.shipMesh.localRotation.x / innerRotationDivider, playerController.shipMesh.localRotation.y / innerRotationDivider, playerController.shipMesh.localRotation.z / innerRotationDivider, playerController.shipMesh.localRotation.w);
         Quaternion outerRot = new Quaternion(playerController.shipMesh.localRotation.x / outerRotationDivider, playerController.shipMesh.localRotation.y / outerRotationDivider, playerController.shipMesh.localRotation.z / outerRotationDivider, playerController.shipMesh.localRotation.w);
-        Quaternion uiRot = new Quaternion(uiPivots.transform.localRotation.x, uiPivots.transform.localRotation.y, rollValue, uiPivots.transform.localRotation.w);
-        print(uiRot);
+
+
+        float lerpVKey = Mathf.Lerp(currentLerp, -playerInput.vKey * uiPivotMultiplier, lerpTime);
+        currentLerp = lerpVKey;
 
         innerCircle.transform.DORotateQuaternion(innerRot, 0.05f);
         outerCircle.transform.DORotateQuaternion(outerRot, 0.05f);
-        uiPivots.transform.DORotateQuaternion(uiRot, 0.1f);
 
+
+        if (playerInput.vKey == 0 && playerInput.vKey2 == 0)
+        {
+            //calculate primary pitch 
+            uiPivots.GetComponent<RectTransform>().offsetMax = new Vector2(0, lerpVKey);
+            uiPivots.GetComponent<RectTransform>().offsetMin = new Vector2(0, lerpVKey);
+        }
+        else if (playerInput.vKey != 0)
+        {
+            //continue calculate primary pitch 
+            uiPivots.GetComponent<RectTransform>().offsetMax = new Vector2(0, lerpVKey);
+            uiPivots.GetComponent<RectTransform>().offsetMin = new Vector2(0, lerpVKey);
+        }
+        else if (playerInput.vKey == 0 && playerInput.vKey2 != 0)
+        {
+            float lerpVKey2 = Mathf.Lerp(currentLerp, -playerInput.vKey2 * uiPivotMultiplier, lerpTime);
+            currentLerp = lerpVKey2;
+            uiPivots.GetComponent<RectTransform>().offsetMax = new Vector2(0, lerpVKey2);
+            uiPivots.GetComponent<RectTransform>().offsetMin = new Vector2(0, lerpVKey2);
+            //continue calculate secondary pitch 
+        }
+
+
+        print(uiPivots.GetComponent<RectTransform>().offsetMin);
+        //uiPivots.GetComponent<RectTransform>().position = new Vector3(uiPivots.GetComponent<RectTransform>().position.x, 0, uiPivots.GetComponent<RectTransform>().position.z);
+
+        /*(uiPivots.transform.position.y + -playerInput.vKey * 50, 0.05f);*/
         //if (!rotateRoll)
         //{
         //    if (playerInput.rKey < 0)

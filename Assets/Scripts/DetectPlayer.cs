@@ -15,5 +15,13 @@ public class DetectPlayer : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == 9)
+        {
+            player = null;
+        }
+    }
+
 
 }

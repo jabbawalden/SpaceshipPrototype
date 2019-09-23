@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyShoot : MonoBehaviour
 {
-    DetectPlayer detectPlayer;
+    private DetectPlayer detectPlayer;
 
     [SerializeField] private GameObject projectile;
     [SerializeField] private Transform origin1;
@@ -15,14 +15,25 @@ public class EnemyShoot : MonoBehaviour
 
     public GameObject[] enemyMesh;
     private bool isAlive;
+    private Vector3 playerDirection;
+    private Vector3 targetDirection;
+    [SerializeField] private LayerMask layerMask;
+    [SerializeField] bool playerInView;
+    [SerializeField] private GameObject target;
 
     private void Awake()
     {
+        target = GameObject.Find("ShipMover");
         isAlive = true;
         detectPlayer = GetComponentInChildren<DetectPlayer>();
         float r = Random.Range(0, 8);
         max = r;
         min = -r;
+    }
+
+    private void Start()
+    {
+
     }
 
     // Update is called once per frame
@@ -34,33 +45,59 @@ public class EnemyShoot : MonoBehaviour
         }
     }
 
-    public void ShootProjectile()
+    private void FixedUpdate()
     {
+        targetDirection = target.transform.position - transform.position;
+        PlayerView();
+    }
 
-
+    public void ShootProjectile() 
+    {
         if (newTime <= Time.time)
         {
+            newTime = Time.time + fireRate;
+
             float rX = Random.Range(min, max);
             float rY = Random.Range(min, max);
             float rZ = Random.Range(min, max);
 
             Vector3 targetPosition = new Vector3(detectPlayer.player.transform.position.x + rX, detectPlayer.player.transform.position.y + rY, detectPlayer.player.transform.position.z + rZ);
-            Vector3 direction = targetPosition - transform.position;
-
-            newTime = Time.time + fireRate;
+            playerDirection = targetPosition - transform.position;
 
             //Ray ray = new Ray(origin1.transform.position, direction);
 
-            GameObject obj1 = Instantiate(projectile, origin1.position, Quaternion.identity);
+            if (playerInView)
+            {
+                GameObject obj1 = Instantiate(projectile, origin1.position, Quaternion.identity);
 
-            //vector3 is world space, use transform forward instead to get objects forward rotation
-            //direction = transform.forward;
-            float newSpeed = projSpeed;
-
-            obj1.GetComponent<Rigidbody>().velocity = direction * newSpeed * Time.deltaTime;
-            obj1.transform.rotation = Quaternion.LookRotation(transform.forward);
+                //vector3 is world space, use transform forward instead to get objects forward rotation
+                //direction = transform.forward;
+                float newSpeed = projSpeed;
+                obj1.GetComponent<Rigidbody>().velocity = playerDirection * newSpeed * Time.deltaTime;
+                obj1.transform.rotation = Quaternion.LookRotation(transform.forward);
+            }
         }
     }
+
+
+
+    public void PlayerView()
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(origin1.position, targetDirection, out hit, Mathf.Infinity, layerMask))
+        {
+            if (hit.collider)
+                playerInView = false;
+        }
+        else
+        {
+            playerInView = true;
+        }
+
+        Debug.DrawRay(origin1.position, targetDirection);
+    }
+    
 
     public void DestroyEnemy()
     {
