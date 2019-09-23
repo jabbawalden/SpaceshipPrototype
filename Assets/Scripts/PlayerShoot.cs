@@ -13,13 +13,17 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] private float newRegenTime; 
     Vector3 direction;
     [SerializeField] float maxHeat;
-    float currentHeat;
+    private float currentHeat;
 
-    PlayerInput playerInput;
+    private PlayerInput playerInput;
+    private UIManager uiManager;
+    [System.NonSerialized] public bool haveReachedLimit;
 
     private void Start()
     {
+        uiManager = FindObjectOfType<UIManager>();
         playerInput = FindObjectOfType<PlayerInput>();
+        currentHeat = maxHeat;
     }
 
     private void Update()
@@ -27,13 +31,20 @@ public class PlayerShoot : MonoBehaviour
         if (newRegenTime <= Time.time)
         {
             newRegenTime = Time.time + regenRate;
-            ReduceHeat();
+            EnergyManagement();
+
+            
+            if (haveReachedLimit && currentHeat > 15)
+            {
+                haveReachedLimit = false;
+                uiManager.ShootMeterColorWhite();
+            }
         }
     }
 
     public void ShootProjectile(float shipMomentum, Vector3 direction)
     {
-        if (newTime <= Time.time && currentHeat < maxHeat)
+        if (newTime <= Time.time && currentHeat > 0)
         {
             newTime = Time.time + fireRate;
 
@@ -49,14 +60,22 @@ public class PlayerShoot : MonoBehaviour
             obj2.GetComponent<Rigidbody>().velocity = direction * newSpeed * Time.deltaTime;
             obj2.transform.rotation = Quaternion.LookRotation(transform.forward);
 
-            currentHeat++;
+            currentHeat--;
         }
     }
 
-    public void ReduceHeat()
+    public void EnergyManagement()
     {
-        if (!playerInput.isShooting && currentHeat > 0)
-            currentHeat--;
+        if (!playerInput.isShooting && currentHeat < maxHeat)
+            currentHeat++;
+
+        if (currentHeat == 0)
+            haveReachedLimit = true;
+
+        if (haveReachedLimit)
+        {
+            uiManager.ShootMeterColorRed();
+        }
     }
 
     public float HeatPercent()

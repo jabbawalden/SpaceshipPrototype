@@ -1042,7 +1042,7 @@ MonoBehaviour:
   shipDestroyed: {fileID: 8559356612875351175}
   cam: {fileID: 0}
   maxEnergy: 100
-  regenRate: 0.1
+  regenRate: 0.01
 --- !u!114 &3300404934111081264
 MonoBehaviour:
   m_ObjectHideFlags: 0

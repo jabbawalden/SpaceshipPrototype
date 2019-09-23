@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
 
     public Image crossHair;
     private PlayerInput playerInput;
+    private UIManager uiManager;
 
     public SpeedState speedState;
     public Transform shipMesh;
@@ -65,7 +66,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxEnergy;
     private float currentEnergy;
     [SerializeField] private float regenRate;
-    private float newRegenTime;  
+    private float newRegenTime;
+    /*[System.NonSerialized] */public bool haveReachedLimit;
+
 
     private void Awake()
     {
@@ -76,6 +79,7 @@ public class PlayerController : MonoBehaviour
         mT = transform;
         rb = GetComponent<Rigidbody>();
         playerInput = GetComponent<PlayerInput>();
+        uiManager = FindObjectOfType<UIManager>();
     }
 
     void Start()
@@ -119,10 +123,22 @@ public class PlayerController : MonoBehaviour
         {
             newRegenTime = Time.time + regenRate;
 
-            if (playerInput.isBoosting)
+            if (playerInput.isBoosting && currentEnergy > 0)
                 currentEnergy--;
             else if (!playerInput.isBoosting && currentEnergy < maxEnergy)
                 currentEnergy++;
+        }
+
+        if (currentEnergy == 0)
+        {
+            haveReachedLimit = true;
+            uiManager.BoostMeterRed();
+        }
+
+        if (haveReachedLimit && currentEnergy > 50)
+        {
+            haveReachedLimit = false;
+            uiManager.BoostMeterWhite();
         }
     }
 

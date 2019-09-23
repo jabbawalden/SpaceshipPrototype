@@ -117,7 +117,7 @@ public class PlayerInput : MonoBehaviour
         //set ship state to control behavior
         float bKey = Input.GetAxis("Boost");
 
-        if (bKey != 0)
+        if (bKey != 0 && !playerController.haveReachedLimit)
         {
             playerController.speedState = SpeedState.boost;
             isBoosting = true;
@@ -140,7 +140,7 @@ public class PlayerInput : MonoBehaviour
         //float rightJoyH = Input.GetAxis("Horizontal1");
         //float rightJoyV = Input.GetAxis("Vertical1");
         //print(rightJoyH);
-        //print(rightJoyV);
+        //print(rightJoyV); 
 
         //float rotH = rightJoyH * rotateDestination;
         //float rotV = rightJoyV * rotateDestination;
@@ -157,7 +157,7 @@ public class PlayerInput : MonoBehaviour
             playerShoot.ShootProjectile(playerController.engineMomentum, ray.direction);
         }
         */
-        if (Input.GetAxis("Fire1") != 0)
+        if (Input.GetAxis("Fire1") != 0 && !playerShoot.haveReachedLimit)
         {
             playerShoot.ShootProjectile(playerController.engineMomentum, ray.direction);
             isShooting = true;
