@@ -9,23 +9,31 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] private float projSpeed;
     [SerializeField] private float fireRate;
     [SerializeField] private float newTime;
+    [SerializeField] private float regenRate;
+    [SerializeField] private float newRegenTime; 
     Vector3 direction;
+    [SerializeField] float maxHeat;
+    float currentHeat;
+
+    PlayerInput playerInput;
+
+    private void Start()
+    {
+        playerInput = FindObjectOfType<PlayerInput>();
+    }
 
     private void Update()
     {
-        /*
-        if (Physics.Raycast(origin1.position, transform.forward, 500))
-            Debug.DrawRay(origin1.position, transform.forward);
-        */
-        /*
-        Physics.Raycast(origin1.position, transform.forward, 5000);
-        Debug.DrawRay(origin1.position, transform.forward);
-        */
+        if (newRegenTime <= Time.time)
+        {
+            newRegenTime = Time.time + regenRate;
+            ReduceHeat();
+        }
     }
 
     public void ShootProjectile(float shipMomentum, Vector3 direction)
     {
-        if (newTime <= Time.time)
+        if (newTime <= Time.time && currentHeat < maxHeat)
         {
             newTime = Time.time + fireRate;
 
@@ -41,7 +49,19 @@ public class PlayerShoot : MonoBehaviour
             obj2.GetComponent<Rigidbody>().velocity = direction * newSpeed * Time.deltaTime;
             obj2.transform.rotation = Quaternion.LookRotation(transform.forward);
 
+            currentHeat++;
         }
-      
+    }
+
+    public void ReduceHeat()
+    {
+        if (!playerInput.isShooting && currentHeat > 0)
+            currentHeat--;
+    }
+
+    public float HeatPercent()
+    {
+        float percent = currentHeat / maxHeat;
+        return percent;
     }
 }

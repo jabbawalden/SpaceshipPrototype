@@ -8,7 +8,9 @@ public enum SpeedState {normal, boost}
 public class PlayerController : MonoBehaviour
 {
 
-    public Image image;
+    public Image crossHair;
+    private PlayerInput playerInput;
+
     public SpeedState speedState;
     public Transform shipMesh;
     public Transform rayOrigin;
@@ -60,14 +62,20 @@ public class PlayerController : MonoBehaviour
     //public GameObject[] shipParts;
     [SerializeField] private Camera cam;
 
+    [SerializeField] private float maxEnergy;
+    private float currentEnergy;
+    [SerializeField] private float regenRate;
+    private float newRegenTime;  
+
     private void Awake()
     {
-        cam = FindObjectOfType<Camera>();
+        currentEnergy = maxEnergy;
         shipDestroyed.SetActive(false);
         shipNormal.SetActive(true);
         alive = true;
         mT = transform;
         rb = GetComponent<Rigidbody>();
+        playerInput = GetComponent<PlayerInput>();
     }
 
     void Start()
@@ -94,25 +102,35 @@ public class PlayerController : MonoBehaviour
 
                 shipDestroyed.SetActive(true);
                 shipNormal.SetActive(false);
-
-                //foreach (GameObject part in shipParts)
-                //{
-                //    if(part.GetComponent<Rigidbody>())
-                //    {
-                //        part.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-                //    }
-                //}
             }
-
         }
-
     }
 
     private void Update()
     {
         Aimer();
+        EnergyRegenerate();
+        print(EnergyPercent());
     }
 
+    public void EnergyRegenerate()
+    {
+        if (newRegenTime <= Time.time)
+        {
+            newRegenTime = Time.time + regenRate;
+
+            if (playerInput.isBoosting)
+                currentEnergy--;
+            else if (!playerInput.isBoosting && currentEnergy < maxEnergy)
+                currentEnergy++;
+        }
+    }
+
+    public float EnergyPercent()
+    {
+        float percent = currentEnergy / maxEnergy;
+        return percent;
+    }
 
     private void ForwardMomentum(SpeedState speedState)
     {
@@ -205,27 +223,24 @@ public class PlayerController : MonoBehaviour
 
     public void Aimer()
     {
-        //Ray ray = new Ray(rayOrigin.position, transform.forward);
-        //RaycastHit hitInfo;
+        Ray ray = new Ray(rayOrigin.position, transform.forward);
+        RaycastHit hitInfo;
 
         //Vector3 aimEndPos = transform.forward * rayDistance;
         //Vector3 crossHairPos = new Vector3(aimEndPos.x, aimEndPos.y, 0);
 
-        //image.rectTransform.position = cam.WorldToScreenPoint(new Vector3 (crossHairPos.x, crossHairPos.y, 0));
+        if (Physics.Raycast(ray, out hitInfo, rayDistance))
+        {
+            Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 2);
+        }
+        else
+        {
+            Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.green, 2);
+        }
 
-        //print(cam.WorldToScreenPoint(new Vector3(crossHairPos.x, crossHairPos.y, 0)));
-
-        //if (Physics.Raycast(ray, out hitInfo, rayDistance))
-        //{
-        //    //Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 2);
-        //    image.rectTransform.position = cam.WorldToViewportPoint(hitInfo.point);
-        //    print(cam.WorldToViewportPoint(hitInfo.point));
-        //}
-        //else
-        //{
-        //    //Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.green, 2);
-        //}
-        ////AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
+        AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
+        Vector2 aimWorldPos = cam.WorldToScreenPoint(AimerCubeTest.transform.position);
+        crossHair.rectTransform.position = new Vector2(aimWorldPos.x, aimWorldPos.y);
     }
 
     IEnumerator SideSpin()

@@ -28,6 +28,8 @@ public class PlayerInput : MonoBehaviour
     public float lerpValueV;
     public float smoothTime;
     public float rotateDestination;
+    public bool isShooting;
+    public bool isBoosting;
 
     private void Awake()
     {
@@ -52,13 +54,11 @@ public class PlayerInput : MonoBehaviour
 
     private void RestartButton()
     {
-
         if (Input.GetKeyDown("joystick button 7"))
         {
             print("Start Pressed");
             SceneManager.LoadScene(0);
         }
-
 
         //if (sKey != 0)
         //{
@@ -78,10 +78,9 @@ public class PlayerInput : MonoBehaviour
         float vKey2 = Input.GetAxis("Vertical1");
         //need input for rolling
 
-        playerController.inputPitch += vKey;
+        playerController.inputPitch = vKey;
 
 
-        /*
         if (vKey != 0)
         {
             playerController.inputPitch = vKey;
@@ -89,7 +88,7 @@ public class PlayerInput : MonoBehaviour
         else
         {
             playerController.inputPitch = vKey2;
-        }*/
+        }
 
         playerController.inputTurn = hKey;
         playerController.inputRoll = rKey;
@@ -115,16 +114,18 @@ public class PlayerInput : MonoBehaviour
 
     private void ShipBoostInput()
     {
-        //set ship state to control behaviour
+        //set ship state to control behavior
         float bKey = Input.GetAxis("Boost");
 
         if (bKey != 0)
         {
             playerController.speedState = SpeedState.boost;
+            isBoosting = true;
         }
         else
         {
             playerController.speedState = SpeedState.normal;
+            isBoosting = false;
         }
     }
 
@@ -159,6 +160,11 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetAxis("Fire1") != 0)
         {
             playerShoot.ShootProjectile(playerController.engineMomentum, ray.direction);
+            isShooting = true;
+        }
+        else
+        {
+            isShooting = false;
         }
     }
 
@@ -176,7 +182,6 @@ public class PlayerInput : MonoBehaviour
         float h = 0;
         float v = 0;
 
-
         if (mousePos.x >= xThresh || mousePos.x <= -xThresh)
             h = Mathf.Lerp(h, mousePos.x, xLerp);
         else
@@ -189,7 +194,6 @@ public class PlayerInput : MonoBehaviour
 
         camFollowMouse.inputTurn = h;
         camFollowMouse.inputPitch = -v;
-
     }
 
 }
