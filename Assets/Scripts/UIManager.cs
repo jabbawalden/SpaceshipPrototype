@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening; 
+using DG.Tweening;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -29,13 +30,31 @@ public class UIManager : MonoBehaviour
     bool haveRotatedRoll;
 
     float currentLerp;
+    float currentLerp2;
     [SerializeField] float lerpTime;
+
+    [SerializeField] private GameObject mission1, mission2;
+    [SerializeField] private Vector3 startingScale;
+    [SerializeField] private Vector3 endingScale; 
+    [SerializeField] private GameObject mp1FinalLoc;
+    [SerializeField] private GameObject mp2FinalLoc;
 
     private void Awake()
     {
         playerInput = FindObjectOfType<PlayerInput>();
         playerController = FindObjectOfType<PlayerController>();
         playerShoot = FindObjectOfType<PlayerShoot>();
+
+        mission1.SetActive(false);
+        mission2.SetActive(false);
+
+        mission1.GetComponent<RectTransform>().transform.localScale = startingScale;
+        mission2.GetComponent<RectTransform>().transform.localScale = startingScale;
+    }
+
+    private void Start()
+    {
+        StartCoroutine(SetMissionInstructions());
     }
 
     // Update is called once per frame
@@ -43,19 +62,24 @@ public class UIManager : MonoBehaviour
     {
         BoostMeter();
         ShootingMeter();
-        //float rollValue = Mathf.Clamp(playerInput.rKey, -5, 5);
+        RotateUI();
+    }
 
+    private void RotateUI()
+    {
         Quaternion innerRot = new Quaternion(playerController.shipMesh.localRotation.x / innerRotationDivider, playerController.shipMesh.localRotation.y / innerRotationDivider, playerController.shipMesh.localRotation.z / innerRotationDivider, playerController.shipMesh.localRotation.w);
         Quaternion outerRot = new Quaternion(playerController.shipMesh.localRotation.x / outerRotationDivider, playerController.shipMesh.localRotation.y / outerRotationDivider, playerController.shipMesh.localRotation.z / outerRotationDivider, playerController.shipMesh.localRotation.w);
-
 
         float lerpVKey = Mathf.Lerp(currentLerp, -playerInput.vKey * uiPivotMultiplier, lerpTime);
         currentLerp = lerpVKey;
 
+        float lerpRKey = Mathf.Lerp(currentLerp, -playerInput.rKey * 5, lerpTime);
+        currentLerp2 = lerpRKey;
+
         innerCircle.transform.DORotateQuaternion(innerRot, 0.05f);
         outerCircle.transform.DORotateQuaternion(outerRot, 0.05f);
 
-
+        //for up and down movements
         if (playerInput.vKey == 0 && playerInput.vKey2 == 0)
         {
             //calculate primary pitch 
@@ -76,42 +100,28 @@ public class UIManager : MonoBehaviour
             uiPivots.GetComponent<RectTransform>().offsetMin = new Vector2(0, lerpVKey2);
             //continue calculate secondary pitch 
         }
+    }
 
+    private void MissionTextSet(GameObject missionComp, GameObject finalLoc)
+    {
 
-        print(uiPivots.GetComponent<RectTransform>().offsetMin);
-        //uiPivots.GetComponent<RectTransform>().position = new Vector3(uiPivots.GetComponent<RectTransform>().position.x, 0, uiPivots.GetComponent<RectTransform>().position.z);
+        missionComp.GetComponent<RectTransform>().DOScale(endingScale, 0.9f);
+        missionComp.GetComponent<RectTransform>().DOLocalMove(finalLoc.transform.localPosition, 0.9f);
+    }
 
-        /*(uiPivots.transform.position.y + -playerInput.vKey * 50, 0.05f);*/
-        //if (!rotateRoll)
-        //{
-        //    if (playerInput.rKey < 0)
-        //    {
-        //        rotateRoll = true;
-        //        print("rKey has value");
-        //        if (!haveRotatedRoll)
-        //        {
-        //            example.transform.DORotate(new Vector3(0, 0, -35), 1, RotateMode.LocalAxisAdd);
-        //            haveRotatedRoll = true;
-        //            print("start rotation");
-        //        }
-        //    }
-        //    else if (playerInput.rKey > 0)
-        //    {
-        //        rotateRoll = true;
-        //        print("rKey has value");
-        //        if (!haveRotatedRoll)
-        //        {
-        //            example.transform.DORotate(new Vector3(0, 0, 35), 1, RotateMode.LocalAxisAdd);
-        //            haveRotatedRoll = true;
-        //            print("start rotation");
-        //        }
-        //    }
-        //    else if (playerInput.rKey == 0)
-        //    {
-        //        haveRotatedRoll = false;
-        //        rotateRoll = false;
-        //    }
-        //}
+    private IEnumerator SetMissionInstructions()
+    {
+        yield return new WaitForSeconds(0.5f);
+        mission1.SetActive(true);
+
+        yield return new WaitForSeconds(0.4f);
+        MissionTextSet(mission1, mp1FinalLoc);
+
+        yield return new WaitForSeconds(0.8f);
+        mission2.SetActive(true);
+
+        yield return new WaitForSeconds(0.4f);
+        MissionTextSet(mission2, mp2FinalLoc);
     }
 
     private void BoostMeter()

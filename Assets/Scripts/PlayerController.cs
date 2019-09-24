@@ -246,11 +246,12 @@ public class PlayerController : MonoBehaviour
 
         if (Physics.Raycast(ray, out hitInfo, rayDistance))
         {
-            Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 2);
+            //print(hitInfo.collider.gameObject.name);
+            //Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 2);
         }
         else
         {
-            Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.green, 2);
+            //Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.green, 2);
         }
 
         AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;

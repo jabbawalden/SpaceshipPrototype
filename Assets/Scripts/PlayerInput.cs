@@ -168,6 +168,16 @@ public class PlayerInput : MonoBehaviour
         {
             isShooting = false;
         }
+
+        if (Input.GetKey(KeyCode.Mouse0) && !playerShoot.haveReachedLimit)
+        {
+            playerShoot.ShootProjectile(playerController.engineMomentum, ray.direction);
+            isShooting = true;
+        }
+        else
+        {
+            isShooting = false;
+        }
     }
 
     private void CameraFollowInput ()

@@ -1032,7 +1032,7 @@ MonoBehaviour:
   smoothPitch: 2.3
   smoothYaw: 2.2
   smoothRoll: 0.5
-  rayDistance: 2400
+  rayDistance: 26000
   smoothTime: 0.06
   alive: 0
   health: 3
@@ -1041,8 +1041,9 @@ MonoBehaviour:
   shipNormal: {fileID: 8290772929982771220}
   shipDestroyed: {fileID: 8559356612875351175}
   cam: {fileID: 0}
-  maxEnergy: 100
+  maxEnergy: 200
   regenRate: 0.01
+  haveReachedLimit: 0
 --- !u!114 &3300404934111081264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1075,6 +1076,10 @@ MonoBehaviour:
   rotateDestination: 30
   isShooting: 0
   isBoosting: 0
+  hKey: 0
+  vKey: 0
+  rKey: 0
+  vKey2: 0
 --- !u!114 &3300404934111081265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1094,7 +1099,7 @@ MonoBehaviour:
   projSpeed: 19000
   fireRate: 0.1
   newTime: 0
-  regenRate: 0.03
+  regenRate: 0.05
   newRegenTime: 0
   maxHeat: 30
 --- !u!54 &3300404934111081267
