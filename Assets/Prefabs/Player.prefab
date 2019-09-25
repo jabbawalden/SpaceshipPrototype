@@ -1083,11 +1083,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 047416a39c1812748b546d6170dac1ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crossHair: {fileID: 0}
   speedState: 0
   shipMesh: {fileID: 3300404934822865852}
-  rayOrigin: {fileID: 3300404934033028974}
-  AimerCubeTest: {fileID: 0}
   engineMomentum: 0
   currentEngineMomentum: 0
   maxEngineMomentum: 40
@@ -1100,15 +1097,13 @@ MonoBehaviour:
   smoothPitch: 2.3
   smoothYaw: 2.2
   smoothRoll: 0.5
-  rayDistance: 45000
   smoothTime: 0.06
   alive: 0
-  health: 3
+  maxHealth: 3
   sideSpinning: 0
   spinSpeed: 80
   shipNormal: {fileID: 8290772929982771220}
   shipDestroyed: {fileID: 8559356612875351175}
-  cam: {fileID: 2977653193676765260}
   maxEnergy: 200
   regenRate: 0.01
   haveReachedLimit: 0
@@ -1160,6 +1155,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74e346815e5ac9042899ae3dfa60a708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  crossHair: {fileID: 0}
+  AimerCubeTest: {fileID: 0}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 74752
+  rayOrigin: {fileID: 3300404934033028974}
+  cam: {fileID: 2977653193676765260}
+  rayDistance: 95000
   projectile: {fileID: 2652336315020387763, guid: b7ace855091b95c4abe9dac443702efe,
     type: 3}
   origin1: {fileID: 3300404935035459519}

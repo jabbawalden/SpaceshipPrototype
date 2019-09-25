@@ -7,18 +7,13 @@ public enum SpeedState {normal, boost}
 
 public class PlayerController : MonoBehaviour
 {
-
-    public Image crossHair;
     private PlayerInput playerInput;
     private UIManager uiManager;
     private CameraShake cameraShake;
     private GameManager gameManager;
 
-    [SerializeField] private LayerMask layerMask;
     public SpeedState speedState;
     public Transform shipMesh;
-    public Transform rayOrigin;
-    public GameObject AimerCubeTest;
     public float engineMomentum;
     public float currentEngineMomentum;
     public float maxEngineMomentum;
@@ -47,8 +42,6 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     Transform mT;
 
-    [SerializeField] float rayDistance;
-
 
     private float current;
     private float lerpValue;
@@ -56,7 +49,9 @@ public class PlayerController : MonoBehaviour
     bool haveStoppedInput;
 
     public bool alive;
-    public int health;
+    [System.NonSerialized] public int currentHealth;
+    public int maxHealth;
+
     [SerializeField] private bool sideSpinning;
     [SerializeField] private float spinSpeed;
     private float currentSpinSpeed;
@@ -64,7 +59,6 @@ public class PlayerController : MonoBehaviour
 
     public GameObject shipNormal, shipDestroyed;
     //public GameObject[] shipParts;
-    [SerializeField] private Camera cam;
 
     [SerializeField] private float maxEnergy;
     private float currentEnergy;
@@ -90,6 +84,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         //default engine start
+        currentHealth = maxHealth;
         engineMomentum = maxEngineMomentum * 0.75f;
         currentEngineMomentum = maxEngineMomentum * 0.75f;
     }
@@ -114,7 +109,6 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        Aimer();
         EnergyRegenerate();
     }
 
@@ -251,43 +245,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void Aimer()
-    {
-        Ray ray = new Ray(rayOrigin.position, transform.forward);
-        RaycastHit hitInfo;
 
-        //Vector3 aimEndPos = transform.forward * rayDistance;
-        //Vector3 crossHairPos = new Vector3(aimEndPos.x, aimEndPos.y, 0);
-
-        if (Physics.Raycast(ray, out hitInfo, rayDistance, layerMask))
-        {
-            print(hitInfo.collider.gameObject.layer);
-
-            if (hitInfo.collider.gameObject.layer == 13 || hitInfo.collider.gameObject.layer == 10)
-            {
-                AimerCubeTest.transform.position = hitInfo.point;
-                print("hitting ship or enemy");
-            }
-            else
-            {
-                print("hitting something else");
-                AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
-            }
-
-            //AimerCubeTest.transform.position = hitInfo.point;
-            //print(hitInfo.collider.gameObject.name);
-            //Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 2);
-        }
-        else
-        {
-            print("hitting nothing");
-            AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
-            //Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.green, 2);
-        }
-
-        Vector2 aimWorldPos = cam.WorldToScreenPoint(AimerCubeTest.transform.position);
-        crossHair.rectTransform.position = new Vector2(aimWorldPos.x, aimWorldPos.y);
-    }
 
     IEnumerator SideSpin()
     {
@@ -311,9 +269,10 @@ public class PlayerController : MonoBehaviour
 
     public void DamagePlayer()
     {
-        health -= 1;
+        currentHealth -= 1;
+        uiManager.LifeMeterBop();
         //print("player hit");
-        if (health <= 0)
+        if (currentHealth <= 0)
         {
             Death();
         }
@@ -321,6 +280,12 @@ public class PlayerController : MonoBehaviour
         {
             cameraShake.CallCamShake(0.6f, 0.18f);
         }
+    }
+
+    public void HealPlayer()
+    {
+        currentHealth += 1;
+        uiManager.LifeMeterBop();
     }
 
     private void OnCollisionEnter(Collision collision)

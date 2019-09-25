@@ -147,7 +147,7 @@ public class UIManager : MonoBehaviour
 
     private void LifeMeter()
     {
-        switch(playerController.health)
+        switch(playerController.currentHealth)
         {
             case 3:
                 lifeMeter.value = 1;
@@ -201,6 +201,7 @@ public class UIManager : MonoBehaviour
     public void SetEndMissionPanel(bool complete)
     {
         endMissionPanel.SetActive(true);
+        mission1.SetActive(false);
         mainPanel.SetActive(false);
         //StartCoroutine(MissionStateTextSize());
 
@@ -230,5 +231,17 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(4f);
         startPanel.SetActive(false);
+    }
+
+    public void LifeMeterBop()
+    {
+        StartCoroutine(LifeBop());
+    }
+
+    IEnumerator LifeBop()
+    {
+        lifeMeter.GetComponent<RectTransform>().DOScale(new Vector3(1.4f, 0.6f, 1), 0.2f);
+        yield return new WaitForSeconds(0.2f);
+        lifeMeter.GetComponent<RectTransform>().DOScale(new Vector3(1.1f, 0.5f, 1), 0.3f);
     }
 }

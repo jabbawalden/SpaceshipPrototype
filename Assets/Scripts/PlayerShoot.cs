@@ -1,9 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerShoot : MonoBehaviour
 {
+    public Image crossHair;
+    public GameObject AimerCubeTest;
+
+    [SerializeField] private LayerMask layerMask;
+    public Transform rayOrigin;
+    [SerializeField] private Camera cam;
+    [SerializeField] float rayDistance;
+
     [SerializeField] private GameObject projectile;
     [SerializeField] private Transform origin1, origin2;
     [SerializeField] private float projSpeed;
@@ -28,6 +37,8 @@ public class PlayerShoot : MonoBehaviour
 
     private void Update()
     {
+        Aimer();
+
         if (newRegenTime <= Time.time)
         {
             newRegenTime = Time.time + regenRate;
@@ -82,5 +93,34 @@ public class PlayerShoot : MonoBehaviour
     {
         float percent = currentHeat / maxHeat;
         return percent;
+    }
+
+    public void Aimer()
+    {
+        Ray ray = new Ray(rayOrigin.position, transform.forward);
+        RaycastHit hitInfo;
+
+        if (Physics.Raycast(ray, out hitInfo, rayDistance, layerMask))
+        {
+
+            if (hitInfo.collider.gameObject.layer == 13 || hitInfo.collider.gameObject.layer == 10 || hitInfo.collider.gameObject.layer == 16)
+            {
+                AimerCubeTest.transform.position = hitInfo.point;
+            }
+            else
+            {
+                AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
+            }
+            //print(hitInfo.collider.gameObject.name);
+            //Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 2);
+        }
+        else
+        {
+            AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
+            //Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.green, 2);
+        }
+
+        Vector2 aimWorldPos = cam.WorldToScreenPoint(AimerCubeTest.transform.position);
+        crossHair.rectTransform.position = new Vector2(aimWorldPos.x, aimWorldPos.y);
     }
 }

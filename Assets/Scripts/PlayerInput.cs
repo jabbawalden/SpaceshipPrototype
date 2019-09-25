@@ -68,10 +68,12 @@ public class PlayerInput : MonoBehaviour
         else if (gameManager.gameState == GameState.Restart)
         {
             RestartButton();
+            QuitButton();
         }
         else if (gameManager.gameState == GameState.Start)
         {
             StartButton();
+            QuitButton();
         }
 
     }
@@ -92,6 +94,17 @@ public class PlayerInput : MonoBehaviour
             print("Start Pressed");
             gameManager.GameStatePlaying();
         }
+    }
+
+    private void QuitButton()
+    {
+        if (Input.GetKeyDown("joystick button 6"))
+        {
+            Application.Quit();
+            print("Application Exit");
+        }
+
+
     }
 
     private void ShipMovementBasicInput()
