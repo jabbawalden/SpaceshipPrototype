@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public Image crossHair;
     private PlayerInput playerInput;
     private UIManager uiManager;
+    private CameraShake cameraShake;
 
     public SpeedState speedState;
     public Transform shipMesh;
@@ -53,7 +54,7 @@ public class PlayerController : MonoBehaviour
     bool haveStoppedInput;
 
     public bool alive;
-    public float health = 3;
+    public int health = 5;
     [SerializeField] private bool sideSpinning;
     [SerializeField] private float spinSpeed;
     private float currentSpinSpeed;
@@ -80,6 +81,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerInput = GetComponent<PlayerInput>();
         uiManager = FindObjectOfType<UIManager>();
+        cameraShake = FindObjectOfType<CameraShake>();
     }
 
     void Start()
@@ -91,22 +93,15 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate() 
     {
-        if (health > 0)
+        if (alive)
         {
             ForwardMomentum(speedState);
             ShipDirection(inputTurn, inputPitch, inputRoll);
         }
         else
         {
+            Death();
             rb.velocity = new Vector3(0, 0, 0);
-
-            if (alive)
-            {
-                alive = false;
-
-                shipDestroyed.SetActive(true);
-                shipNormal.SetActive(false);
-            }
         }
     }
 
@@ -114,6 +109,17 @@ public class PlayerController : MonoBehaviour
     {
         Aimer();
         EnergyRegenerate();
+    }
+
+    private void Death()
+    {
+        if (alive)
+        {
+            alive = false;
+
+            shipDestroyed.SetActive(true);
+            shipNormal.SetActive(false);
+        }
     }
 
     public void EnergyRegenerate()
@@ -278,4 +284,32 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(SideSpin());
         }
     }
+
+    public void DamagePlayer()
+    {
+        health -= 1;
+        //print("player hit");
+        if (health <= 0)
+        {
+            Death();
+        }
+        else
+        {
+            cameraShake.CallCamShake(0.6f, 0.18f);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == 13)
+        {
+            Death();
+        }
+        else if (collision.gameObject.layer == 10)
+        {
+            Death();
+        }
+    }
+
+
 }

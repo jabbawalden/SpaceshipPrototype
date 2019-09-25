@@ -1032,10 +1032,10 @@ MonoBehaviour:
   smoothPitch: 2.3
   smoothYaw: 2.2
   smoothRoll: 0.5
-  rayDistance: 26000
+  rayDistance: 45000
   smoothTime: 0.06
   alive: 0
-  health: 3
+  health: 5
   sideSpinning: 0
   spinSpeed: 80
   shipNormal: {fileID: 8290772929982771220}

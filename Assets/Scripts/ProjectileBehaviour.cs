@@ -11,6 +11,7 @@ public class ProjectileBehaviour : MonoBehaviour
     private GameObject playerShip;
     public float damage;
     [SerializeField] private int targetLayer;
+    private bool haveHit;
 
     PlayerController playerController;
 
@@ -31,23 +32,6 @@ public class ProjectileBehaviour : MonoBehaviour
         Destroy(gameObject);
     }
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.gameObject.layer == targetLayer)
-    //    {
-    //        print("Hit Player");
-
-    //        if (targetLayer == 9 && playerController)
-    //        {
-    //            playerController.health -= 1;
-    //            print("Player lose health");
-    //            Destroy(gameObject);
-    //        }
-
-    //    }
-
-    //}
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == targetLayer && targetLayer == 10)
@@ -55,21 +39,21 @@ public class ProjectileBehaviour : MonoBehaviour
             if (other.gameObject.GetComponentInParent<EnemyShoot>())
             {
                 other.gameObject.GetComponentInParent<EnemyShoot>().DestroyEnemy();
-                //print("Destroy enemy");
+                print("Destroy enemy");
+                Destroy(gameObject);
             }
         }
         else if (other.gameObject.layer == targetLayer && targetLayer == 9)
         {
             //print("Hit Player");
-
-            if (targetLayer == 9 && playerController)
+            if (!haveHit && playerController)
             {
-                playerController.health -= 1;
-                //print("Player lose health");
+                print("projectile hits player");
+                playerController.DamagePlayer();
+                haveHit = true;
                 Destroy(gameObject);
             }
         }
-
         if (other.CompareTag("MainShip"))
         {
             //print("Main Ship");

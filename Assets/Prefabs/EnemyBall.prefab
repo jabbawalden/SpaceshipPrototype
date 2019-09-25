@@ -882,7 +882,7 @@ MonoBehaviour:
   projectile: {fileID: 2652336315020387763, guid: 60f663d10a811ac40b39cae9fd4f9610,
     type: 3}
   origin1: {fileID: 693497858}
-  projSpeed: 80
+  projSpeed: 12000
   fireRate: 0.25
   newTime: 0
   enemyMesh:

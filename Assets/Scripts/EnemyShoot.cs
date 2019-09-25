@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyShoot : MonoBehaviour
 {
     private DetectPlayer detectPlayer;
+    private UIManager uiManager;
 
     [SerializeField] private GameObject projectile;
     [SerializeField] private Transform origin1;
@@ -23,17 +24,18 @@ public class EnemyShoot : MonoBehaviour
 
     private void Awake()
     {
+        uiManager = FindObjectOfType<UIManager>();
         target = GameObject.Find("ShipMover");
         isAlive = true;
         detectPlayer = GetComponentInChildren<DetectPlayer>();
-        float r = Random.Range(0, 8);
+        float r = Random.Range(0, 6);
         max = r;
         min = -r;
     }
 
     private void Start()
     {
-
+        uiManager.AddTurretTotal();    
     }
 
     // Update is called once per frame
@@ -63,6 +65,7 @@ public class EnemyShoot : MonoBehaviour
 
             Vector3 targetPosition = new Vector3(detectPlayer.player.transform.position.x + rX, detectPlayer.player.transform.position.y + rY, detectPlayer.player.transform.position.z + rZ);
             playerDirection = targetPosition - transform.position;
+            playerDirection = playerDirection.normalized;
 
             //Ray ray = new Ray(origin1.transform.position, direction);
 
@@ -78,8 +81,6 @@ public class EnemyShoot : MonoBehaviour
             }
         }
     }
-
-
 
     public void PlayerView()
     {
@@ -101,10 +102,15 @@ public class EnemyShoot : MonoBehaviour
 
     public void DestroyEnemy()
     {
-        foreach(GameObject mesh in enemyMesh)
+        if (isAlive)
         {
-            mesh.GetComponent<Rigidbody>().isKinematic = false;
+            foreach (GameObject mesh in enemyMesh)
+            {
+                mesh.GetComponent<Rigidbody>().isKinematic = false;
+            }
+            uiManager.AddTurretKillCount();
+            isAlive = false;
         }
-        isAlive = false;
+
     }
 }

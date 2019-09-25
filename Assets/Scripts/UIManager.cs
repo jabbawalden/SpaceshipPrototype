@@ -33,11 +33,14 @@ public class UIManager : MonoBehaviour
     float currentLerp2;
     [SerializeField] float lerpTime;
 
-    [SerializeField] private GameObject mission1, mission2;
+    [SerializeField] private GameObject mission1;
     [SerializeField] private Vector3 startingScale;
     [SerializeField] private Vector3 endingScale; 
     [SerializeField] private GameObject mp1FinalLoc;
-    [SerializeField] private GameObject mp2FinalLoc;
+
+    public int turretsKilledCount;
+    public int turretsTotalCount;
+    [SerializeField] private TextMeshProUGUI turretsTotal, turretsKilled;
 
     private void Awake()
     {
@@ -46,10 +49,8 @@ public class UIManager : MonoBehaviour
         playerShoot = FindObjectOfType<PlayerShoot>();
 
         mission1.SetActive(false);
-        mission2.SetActive(false);
 
         mission1.GetComponent<RectTransform>().transform.localScale = startingScale;
-        mission2.GetComponent<RectTransform>().transform.localScale = startingScale;
     }
 
     private void Start()
@@ -104,7 +105,6 @@ public class UIManager : MonoBehaviour
 
     private void MissionTextSet(GameObject missionComp, GameObject finalLoc)
     {
-
         missionComp.GetComponent<RectTransform>().DOScale(endingScale, 0.9f);
         missionComp.GetComponent<RectTransform>().DOLocalMove(finalLoc.transform.localPosition, 0.9f);
     }
@@ -116,12 +116,6 @@ public class UIManager : MonoBehaviour
 
         yield return new WaitForSeconds(0.4f);
         MissionTextSet(mission1, mp1FinalLoc);
-
-        yield return new WaitForSeconds(0.8f);
-        mission2.SetActive(true);
-
-        yield return new WaitForSeconds(0.4f);
-        MissionTextSet(mission2, mp2FinalLoc);
     }
 
     private void BoostMeter()
@@ -152,5 +146,17 @@ public class UIManager : MonoBehaviour
     public void BoostMeterWhite()
     {
         boostFill.color = Color.white;
+    }
+
+    public void AddTurretKillCount()
+    {
+        turretsKilledCount += 1;
+        turretsKilled.text = turretsKilledCount.ToString();
+    }
+
+    public void AddTurretTotal()
+    {
+        turretsTotalCount += 1;
+        turretsTotal.text = turretsTotalCount.ToString();
     }
 }

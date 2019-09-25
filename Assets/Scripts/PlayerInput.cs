@@ -51,11 +51,14 @@ public class PlayerInput : MonoBehaviour
     void Update()
     {
         //input functions called
-        ShipMovementBasicInput();
-        ShipSpeedControlInput();
-        ShipBoostInput();
-        ShipShootInput();
-        CameraFollowInput();
+        if (playerController.alive)
+        {
+            ShipMovementBasicInput();
+            ShipSpeedControlInput();
+            ShipBoostInput();
+            ShipShootInput();
+            CameraFollowInput();
+        }
         RestartButton();
     }
 
