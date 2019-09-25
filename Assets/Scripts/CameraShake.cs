@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class CameraShake : MonoBehaviour
 {
-    private Vector3 originalPos;
+    [SerializeField] private Vector3 originalPos;
 
     private void Start()
     {
-        originalPos = transform.localPosition; 
+
     }
 
     private void Update()

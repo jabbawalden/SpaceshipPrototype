@@ -8,6 +8,8 @@ public class PlayerInput : MonoBehaviour
     private PlayerController playerController;
     private PlayerShoot playerShoot;
     private CameraFollowMouse camFollowMouse;
+    private GameManager gameManager;
+
     public GameObject shootDirection;
 
     [SerializeField] Camera cam;
@@ -42,6 +44,7 @@ public class PlayerInput : MonoBehaviour
     {
         playerController = GetComponent<PlayerController>();
         playerShoot = GetComponent<PlayerShoot>();
+        gameManager = FindObjectOfType<GameManager>();
         camFollowMouse = GameObject.Find("CameraFollowMouse").GetComponent<CameraFollowMouse>();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
@@ -51,15 +54,26 @@ public class PlayerInput : MonoBehaviour
     void Update()
     {
         //input functions called
-        if (playerController.alive)
+        if (gameManager.gameState == GameState.Playing)
         {
-            ShipMovementBasicInput();
-            ShipSpeedControlInput();
-            ShipBoostInput();
-            ShipShootInput();
-            CameraFollowInput();
+            if (playerController.alive)
+            {
+                ShipMovementBasicInput();
+                ShipSpeedControlInput();
+                ShipBoostInput();
+                ShipShootInput();
+                CameraFollowInput();
+            }
         }
-        RestartButton();
+        else if (gameManager.gameState == GameState.Restart)
+        {
+            RestartButton();
+        }
+        else if (gameManager.gameState == GameState.Start)
+        {
+            StartButton();
+        }
+
     }
 
     private void RestartButton()
@@ -69,7 +83,15 @@ public class PlayerInput : MonoBehaviour
             print("Start Pressed");
             SceneManager.LoadScene(0);
         }
+    }
 
+    private void StartButton()
+    {
+        if (Input.GetKeyDown("joystick button 7"))
+        {
+            print("Start Pressed");
+            gameManager.GameStatePlaying();
+        }
     }
 
     private void ShipMovementBasicInput()
@@ -172,15 +194,15 @@ public class PlayerInput : MonoBehaviour
             isShooting = false;
         }
 
-        if (Input.GetKey(KeyCode.Mouse0) && !playerShoot.haveReachedLimit)
-        {
-            playerShoot.ShootProjectile(playerController.engineMomentum, ray.direction);
-            isShooting = true;
-        }
-        else
-        {
-            isShooting = false;
-        }
+        //if (Input.GetKey(KeyCode.Mouse0) && !playerShoot.haveReachedLimit)
+        //{
+        //    playerShoot.ShootProjectile(playerController.engineMomentum, ray.direction);
+        //    isShooting = true;
+        //}
+        //else
+        //{
+        //    isShooting = false;
+        //}
     }
 
     private void CameraFollowInput ()

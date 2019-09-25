@@ -11,7 +11,7 @@ public class CameraBehaviour : MonoBehaviour
     [SerializeField] private float camDefaultOffsetZ;
     [SerializeField] private float camBoostOffsetZ;
 
-    [SerializeField] private PlayerController playerController;
+    private PlayerController playerController;
 
     [SerializeField] private Camera cam;
     [SerializeField] private Transform camHolder;
@@ -19,7 +19,10 @@ public class CameraBehaviour : MonoBehaviour
     [SerializeField] private float boostFOV;
     [SerializeField] private float currentFOV;
 
-
+    private void Awake()
+    {
+        playerController = FindObjectOfType<PlayerController>();
+    }
     // Start is called before the first frame update
     void Start()
     {

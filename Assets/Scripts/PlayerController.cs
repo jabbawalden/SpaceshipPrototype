@@ -12,7 +12,9 @@ public class PlayerController : MonoBehaviour
     private PlayerInput playerInput;
     private UIManager uiManager;
     private CameraShake cameraShake;
+    private GameManager gameManager;
 
+    [SerializeField] private LayerMask layerMask;
     public SpeedState speedState;
     public Transform shipMesh;
     public Transform rayOrigin;
@@ -54,7 +56,7 @@ public class PlayerController : MonoBehaviour
     bool haveStoppedInput;
 
     public bool alive;
-    public int health = 5;
+    public int health;
     [SerializeField] private bool sideSpinning;
     [SerializeField] private float spinSpeed;
     private float currentSpinSpeed;
@@ -82,6 +84,7 @@ public class PlayerController : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         uiManager = FindObjectOfType<UIManager>();
         cameraShake = FindObjectOfType<CameraShake>();
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     void Start()
@@ -93,14 +96,18 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate() 
     {
-        if (alive)
+        if (alive && gameManager.gameState == GameState.Playing)
         {
             ForwardMomentum(speedState);
             ShipDirection(inputTurn, inputPitch, inputRoll);
         }
-        else
+        else if (!alive)
         {
             Death();
+            rb.velocity = new Vector3(0, 0, 0);
+        }
+        else if (gameManager.gameState == GameState.Restart || gameManager.gameState == GameState.Start)
+        {
             rb.velocity = new Vector3(0, 0, 0);
         }
     }
@@ -113,6 +120,8 @@ public class PlayerController : MonoBehaviour
 
     private void Death()
     {
+        gameManager.GameStateDead();
+
         if (alive)
         {
             alive = false;
@@ -140,7 +149,7 @@ public class PlayerController : MonoBehaviour
             uiManager.BoostMeterRed();
         }
 
-        if (haveReachedLimit && currentEnergy > 50)
+        if (haveReachedLimit && currentEnergy > maxEnergy / 2)
         {
             haveReachedLimit = false;
             uiManager.BoostMeterWhite();
@@ -250,17 +259,32 @@ public class PlayerController : MonoBehaviour
         //Vector3 aimEndPos = transform.forward * rayDistance;
         //Vector3 crossHairPos = new Vector3(aimEndPos.x, aimEndPos.y, 0);
 
-        if (Physics.Raycast(ray, out hitInfo, rayDistance))
+        if (Physics.Raycast(ray, out hitInfo, rayDistance, layerMask))
         {
+            print(hitInfo.collider.gameObject.layer);
+
+            if (hitInfo.collider.gameObject.layer == 13 || hitInfo.collider.gameObject.layer == 10)
+            {
+                AimerCubeTest.transform.position = hitInfo.point;
+                print("hitting ship or enemy");
+            }
+            else
+            {
+                print("hitting something else");
+                AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
+            }
+
+            //AimerCubeTest.transform.position = hitInfo.point;
             //print(hitInfo.collider.gameObject.name);
             //Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 2);
         }
         else
         {
+            print("hitting nothing");
+            AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
             //Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.green, 2);
         }
 
-        AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
         Vector2 aimWorldPos = cam.WorldToScreenPoint(AimerCubeTest.transform.position);
         crossHair.rectTransform.position = new Vector2(aimWorldPos.x, aimWorldPos.y);
     }

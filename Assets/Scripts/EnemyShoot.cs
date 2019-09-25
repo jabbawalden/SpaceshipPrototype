@@ -107,6 +107,7 @@ public class EnemyShoot : MonoBehaviour
             foreach (GameObject mesh in enemyMesh)
             {
                 mesh.GetComponent<Rigidbody>().isKinematic = false;
+                mesh.layer = 14;
             }
             uiManager.AddTurretKillCount();
             isAlive = false;

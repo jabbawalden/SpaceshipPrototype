@@ -9,12 +9,14 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private Slider boostMeter;
     [SerializeField] private Slider shootMeter;
+    [SerializeField] private Slider lifeMeter;
     [SerializeField] private Image shootFill;
     [SerializeField] private Image boostFill;
 
     private PlayerController playerController;
     private PlayerInput playerInput;
     private PlayerShoot playerShoot;
+    private GameManager gameManager;
     //private GameObject shipMover;
 
     [SerializeField] private Color overHeat;
@@ -24,7 +26,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject uiPivots;
     [SerializeField] private float innerRotationDivider;
     [SerializeField] private float outerRotationDivider;
-    [SerializeField] private float uiPivotMultiplier; 
+    [SerializeField] private float uiPivotMultiplier;
 
     bool rotateRoll;
     bool haveRotatedRoll;
@@ -35,27 +37,34 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private GameObject mission1;
     [SerializeField] private Vector3 startingScale;
-    [SerializeField] private Vector3 endingScale; 
+    [SerializeField] private Vector3 endingScale;
     [SerializeField] private GameObject mp1FinalLoc;
 
     public int turretsKilledCount;
     public int turretsTotalCount;
     [SerializeField] private TextMeshProUGUI turretsTotal, turretsKilled;
+    [SerializeField] private TextMeshProUGUI missionState;
+    [SerializeField] private GameObject endMissionPanel;
+    [SerializeField] private GameObject mainPanel;
+    [SerializeField] private GameObject startPanel;
 
     private void Awake()
     {
         playerInput = FindObjectOfType<PlayerInput>();
         playerController = FindObjectOfType<PlayerController>();
         playerShoot = FindObjectOfType<PlayerShoot>();
+        gameManager = FindObjectOfType<GameManager>();
 
         mission1.SetActive(false);
-
         mission1.GetComponent<RectTransform>().transform.localScale = startingScale;
+
+        endMissionPanel.SetActive(false);
+        mainPanel.SetActive(false);
     }
 
     private void Start()
     {
-        StartCoroutine(SetMissionInstructions());
+
     }
 
     // Update is called once per frame
@@ -63,7 +72,15 @@ public class UIManager : MonoBehaviour
     {
         BoostMeter();
         ShootingMeter();
+        LifeMeter();
         RotateUI();
+    }
+
+    public void PlayGame()
+    {
+        FadeOutStartMissionPanel();
+        mainPanel.SetActive(true);
+        StartCoroutine(SetMissionInstructions());
     }
 
     private void RotateUI()
@@ -128,6 +145,23 @@ public class UIManager : MonoBehaviour
         shootMeter.value = playerShoot.HeatPercent();
     }
 
+    private void LifeMeter()
+    {
+        switch(playerController.health)
+        {
+            case 3:
+                lifeMeter.value = 1;
+                break;
+            case 2:
+                lifeMeter.value = 0.66f;
+                break;
+            case 1:
+                lifeMeter.value = 0.33f;
+                break;
+        }
+
+    }
+
     public void ShootMeterColorRed()
     {
         shootFill.color = overHeat;
@@ -158,5 +192,43 @@ public class UIManager : MonoBehaviour
     {
         turretsTotalCount += 1;
         turretsTotal.text = turretsTotalCount.ToString();
+        if (turretsKilledCount >= turretsTotalCount)
+        {
+            gameManager.GameStateComplete();
+        }
+    }
+
+    public void SetEndMissionPanel(bool complete)
+    {
+        endMissionPanel.SetActive(true);
+        mainPanel.SetActive(false);
+        //StartCoroutine(MissionStateTextSize());
+
+        if (complete)
+        {
+            missionState.text = "MISSION: SUCCESSFUL";
+        }
+        else
+        {
+            missionState.text = "MISSION: CRITICAL FAILURE";
+        }
+    }
+
+    //IEnumerator MissionStateTextSize()
+    //{
+    //    yield return new WaitForSeconds(0.5f);
+    //    missionState.GetComponent<RectTransform>().DOScale(new Vector3(1, 1, 1), 2f);
+    //}
+
+    public void FadeOutStartMissionPanel()
+    {
+        startPanel.GetComponent<Animator>().SetBool("GameStarted", true);
+        StartCoroutine(AnimationTimer());
+    }
+
+    IEnumerator AnimationTimer()
+    {
+        yield return new WaitForSeconds(4f);
+        startPanel.SetActive(false);
     }
 }

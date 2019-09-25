@@ -13,7 +13,7 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] private float newRegenTime; 
     Vector3 direction;
     [SerializeField] float maxHeat;
-    private float currentHeat;
+    [SerializeField] private float currentHeat;
 
     private PlayerInput playerInput;
     private UIManager uiManager;
@@ -67,7 +67,7 @@ public class PlayerShoot : MonoBehaviour
     public void EnergyManagement()
     {
         if (!playerInput.isShooting && currentHeat < maxHeat)
-            currentHeat++;
+            currentHeat += 0.5f;
 
         if (currentHeat == 0)
             haveReachedLimit = true;
