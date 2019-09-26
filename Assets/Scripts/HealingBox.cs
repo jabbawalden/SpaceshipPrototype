@@ -5,6 +5,12 @@ using UnityEngine;
 public class HealingBox : MonoBehaviour
 {
     bool haveHealed;
+
+    private void Update()
+    {
+        transform.Rotate(1, 0, 1);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == 9 && !haveHealed && other.GetComponentInParent<PlayerController>())

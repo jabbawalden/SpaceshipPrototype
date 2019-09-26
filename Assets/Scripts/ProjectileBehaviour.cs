@@ -54,6 +54,10 @@ public class ProjectileBehaviour : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+        else if (other.gameObject.layer == 17 && targetLayer == 10)
+        {
+            other.GetComponent<DoorHolder>().BreakDoors();
+        }
         if (other.CompareTag("MainShip"))
         {
             //print("Main Ship");

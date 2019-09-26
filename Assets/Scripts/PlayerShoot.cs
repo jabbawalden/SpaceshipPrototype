@@ -6,7 +6,10 @@ using UnityEngine.UI;
 public class PlayerShoot : MonoBehaviour
 {
     public Image crossHair;
+    public Image enemyPointUI;
+    public List<GameObject> enemyInRange = new List<GameObject>();
     public GameObject AimerCubeTest;
+    public GameObject uiCanvas;
 
     [SerializeField] private LayerMask layerMask;
     public Transform rayOrigin;
@@ -38,6 +41,7 @@ public class PlayerShoot : MonoBehaviour
     private void Update()
     {
         Aimer();
+        EnemySight();
 
         if (newRegenTime <= Time.time)
         {
@@ -98,14 +102,14 @@ public class PlayerShoot : MonoBehaviour
     public void Aimer()
     {
         Ray ray = new Ray(rayOrigin.position, transform.forward);
-        RaycastHit hitInfo;
+        RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hitInfo, rayDistance, layerMask))
+        if (Physics.Raycast(ray, out hit, rayDistance, layerMask))
         {
 
-            if (hitInfo.collider.gameObject.layer == 13 || hitInfo.collider.gameObject.layer == 10 || hitInfo.collider.gameObject.layer == 16)
+            if (hit.collider.gameObject.layer == 13 || hit.collider.gameObject.layer == 10 || hit.collider.gameObject.layer == 16 || hit.collider.gameObject.layer == 17)
             {
-                AimerCubeTest.transform.position = hitInfo.point;
+                AimerCubeTest.transform.position = hit.point;
             }
             else
             {
@@ -122,5 +126,70 @@ public class PlayerShoot : MonoBehaviour
 
         Vector2 aimWorldPos = cam.WorldToScreenPoint(AimerCubeTest.transform.position);
         crossHair.rectTransform.position = new Vector2(aimWorldPos.x, aimWorldPos.y);
+    }
+
+    private void EnemySight()
+    {
+        foreach (GameObject obj in enemyInRange)
+        {
+            //if they are in sight do this
+            Vector3 direction = obj.transform.position - transform.position;
+            Ray ray = new Ray(rayOrigin.position, direction);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, rayDistance, layerMask))
+            {
+                if (hit.collider.gameObject.layer == 10)
+                {
+                    if (obj.GetComponent<EnemyShoot>())
+                    {
+                        if (!obj.GetComponent<EnemyShoot>().hasUiPointer)
+                        {
+                            SetEnemyUIPoint(obj);
+                            obj.GetComponent<EnemyShoot>().hasUiPointer = true;
+                        }
+                        else if (obj.GetComponent<EnemyShoot>().isVisible && !obj.GetComponent<EnemyShoot>().haveSpawnedVisible)
+                        {
+                            SetEnemyUIPoint(obj);
+                            obj.GetComponent<EnemyShoot>().haveSpawnedVisible = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (obj.GetComponent<EnemyShoot>())
+                    {
+                        if (obj.GetComponent<EnemyShoot>().hasUiPointer)
+                        {
+                            obj.GetComponent<EnemyShoot>().hasUiPointer = false;
+                            obj.GetComponent<EnemyShoot>().haveSpawnedVisible = false;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (obj.GetComponent<EnemyShoot>())
+                {
+                    if (obj.GetComponent<EnemyShoot>().hasUiPointer)
+                    {
+                        obj.GetComponent<EnemyShoot>().hasUiPointer = false;
+                        obj.GetComponent<EnemyShoot>().haveSpawnedVisible = false;
+                    }
+                }
+            }
+
+
+            //else if not in sight, set hasUiPointer to false
+        }
+    }
+
+    private void SetEnemyUIPoint(GameObject enemyObj)
+    {
+        Image enemyPoint = Instantiate(enemyPointUI);
+        enemyPoint.transform.SetParent(uiCanvas.transform);
+
+        if (enemyPoint.GetComponent<EnemyPointUI>())
+            enemyPoint.GetComponent<EnemyPointUI>().enemyRef = enemyObj;
     }
 }

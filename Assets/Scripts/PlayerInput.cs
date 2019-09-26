@@ -82,7 +82,6 @@ public class PlayerInput : MonoBehaviour
     {
         if (Input.GetKeyDown("joystick button 7"))
         {
-            print("Start Pressed");
             SceneManager.LoadScene(0);
         }
     }
@@ -91,7 +90,6 @@ public class PlayerInput : MonoBehaviour
     {
         if (Input.GetKeyDown("joystick button 7"))
         {
-            print("Start Pressed");
             gameManager.GameStatePlaying();
         }
     }
@@ -101,7 +99,6 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown("joystick button 6"))
         {
             Application.Quit();
-            print("Application Exit");
         }
 
 

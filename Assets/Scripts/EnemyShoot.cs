@@ -15,13 +15,16 @@ public class EnemyShoot : MonoBehaviour
     float min, max;
 
     public GameObject[] enemyMesh;
-    private bool isAlive;
+    public bool isAlive;
     private Vector3 playerDirection;
     private Vector3 targetDirection;
     [SerializeField] private LayerMask layerMask;
     [SerializeField] bool playerInView;
     [SerializeField] private GameObject target;
 
+    public bool hasUiPointer;
+    public bool isVisible;
+    public bool haveSpawnedVisible;
     private void Awake()
     {
         uiManager = FindObjectOfType<UIManager>();
@@ -45,11 +48,11 @@ public class EnemyShoot : MonoBehaviour
         {
             ShootProjectile();
         }
+        targetDirection = target.transform.position - origin1.transform.position;
     }
 
     private void FixedUpdate()
     {
-        targetDirection = target.transform.position - transform.position;
         PlayerView();
     }
 
@@ -88,12 +91,19 @@ public class EnemyShoot : MonoBehaviour
 
         if (Physics.Raycast(origin1.position, targetDirection, out hit, Mathf.Infinity, layerMask))
         {
-            if (hit.collider)
+            if (hit.collider.gameObject.layer == 9)
+            {
+                playerInView = true;
+            }
+            else
+            {
                 playerInView = false;
+            }
+            print(hit.collider.gameObject.name);
         }
         else
         {
-            playerInView = true;
+            playerInView = false;
         }
 
         Debug.DrawRay(origin1.position, targetDirection);
@@ -113,5 +123,17 @@ public class EnemyShoot : MonoBehaviour
             isAlive = false;
         }
 
+    }
+
+    //check if cam can see them while player is true
+    private void OnBecameVisible()
+    {
+        isVisible = true;
+    }
+
+    private void OnBecameInvisible()
+    {
+        isVisible = false;
+        haveSpawnedVisible = false;
     }
 }
