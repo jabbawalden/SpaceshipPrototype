@@ -6,6 +6,7 @@ public class EnemyShoot : MonoBehaviour
 {
     private DetectPlayer detectPlayer;
     private UIManager uiManager;
+    private TargetUIComponent targetUIComp;
 
     [SerializeField] private GameObject projectile;
     [SerializeField] private Transform origin1;
@@ -22,11 +23,13 @@ public class EnemyShoot : MonoBehaviour
     [SerializeField] bool playerInView;
     [SerializeField] private GameObject target;
 
-    public bool hasUiPointer;
-    public bool isVisible;
-    public bool haveSpawnedVisible;
+    //public bool hasUiPointer;
+    //public bool isVisible;
+    //public bool haveSpawnedVisible;
+
     private void Awake()
     {
+        targetUIComp = GetComponent<TargetUIComponent>();
         uiManager = FindObjectOfType<UIManager>();
         target = GameObject.Find("ShipMover");
         isAlive = true;
@@ -38,6 +41,7 @@ public class EnemyShoot : MonoBehaviour
 
     private void Start()
     {
+        targetUIComp.isActive = true;
         uiManager.AddTurretTotal();    
     }
 
@@ -47,6 +51,10 @@ public class EnemyShoot : MonoBehaviour
         if (detectPlayer.player && isAlive)
         {
             ShootProjectile();
+        }
+        else if (!isAlive)
+        {
+            targetUIComp.isActive = false;
         }
         targetDirection = target.transform.position - origin1.transform.position;
     }
@@ -94,12 +102,13 @@ public class EnemyShoot : MonoBehaviour
             if (hit.collider.gameObject.layer == 9)
             {
                 playerInView = true;
+                targetUIComp.isVisible = true;
             }
             else
             {
                 playerInView = false;
+                targetUIComp.isVisible = false;
             }
-            print(hit.collider.gameObject.name);
         }
         else
         {
@@ -128,12 +137,12 @@ public class EnemyShoot : MonoBehaviour
     //check if cam can see them while player is true
     private void OnBecameVisible()
     {
-        isVisible = true;
+        //isVisible = true;
     }
 
     private void OnBecameInvisible()
     {
-        isVisible = false;
-        haveSpawnedVisible = false;
+        //isVisible = false;
+        //haveSpawnedVisible = false;
     }
 }

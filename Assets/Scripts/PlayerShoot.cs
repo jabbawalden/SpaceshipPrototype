@@ -115,13 +115,10 @@ public class PlayerShoot : MonoBehaviour
             {
                 AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
             }
-            //print(hitInfo.collider.gameObject.name);
-            //Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 2);
         }
         else
         {
             AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
-            //Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayDistance, Color.green, 2);
         }
 
         Vector2 aimWorldPos = cam.WorldToScreenPoint(AimerCubeTest.transform.position);
@@ -133,54 +130,30 @@ public class PlayerShoot : MonoBehaviour
         foreach (GameObject obj in enemyInRange)
         {
             //if they are in sight do this
-            Vector3 direction = obj.transform.position - transform.position;
-            Ray ray = new Ray(rayOrigin.position, direction);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, rayDistance, layerMask))
+            if (obj)
             {
-                if (hit.collider.gameObject.layer == 10)
+                Vector3 direction = obj.transform.position - transform.position;
+                Ray ray = new Ray(rayOrigin.position, direction);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit, rayDistance, layerMask))
                 {
-                    if (obj.GetComponent<EnemyShoot>())
+                    if (hit.collider.GetComponentInParent<TargetUIComponent>())
                     {
-                        if (!obj.GetComponent<EnemyShoot>().hasUiPointer)
+                        print("player seeing the enemy");
+                        hit.collider.GetComponentInParent<TargetUIComponent>().isVisible = true;
+
+                        if (!hit.collider.GetComponentInParent<TargetUIComponent>().haveSpawned && hit.collider.GetComponentInParent<TargetUIComponent>().playerCanSeeUs)
                         {
                             SetEnemyUIPoint(obj);
-                            obj.GetComponent<EnemyShoot>().hasUiPointer = true;
-                        }
-                        else if (obj.GetComponent<EnemyShoot>().isVisible && !obj.GetComponent<EnemyShoot>().haveSpawnedVisible)
-                        {
-                            SetEnemyUIPoint(obj);
-                            obj.GetComponent<EnemyShoot>().haveSpawnedVisible = true;
-                        }
-                    }
-                }
-                else
-                {
-                    if (obj.GetComponent<EnemyShoot>())
-                    {
-                        if (obj.GetComponent<EnemyShoot>().hasUiPointer)
-                        {
-                            obj.GetComponent<EnemyShoot>().hasUiPointer = false;
-                            obj.GetComponent<EnemyShoot>().haveSpawnedVisible = false;
+                            hit.collider.GetComponentInParent<TargetUIComponent>().haveSpawned = true;
+                            print("spawn UI");
+                            //spawn
                         }
                     }
                 }
             }
-            else
-            {
-                if (obj.GetComponent<EnemyShoot>())
-                {
-                    if (obj.GetComponent<EnemyShoot>().hasUiPointer)
-                    {
-                        obj.GetComponent<EnemyShoot>().hasUiPointer = false;
-                        obj.GetComponent<EnemyShoot>().haveSpawnedVisible = false;
-                    }
-                }
-            }
 
-
-            //else if not in sight, set hasUiPointer to false
         }
     }
 
@@ -190,6 +163,6 @@ public class PlayerShoot : MonoBehaviour
         enemyPoint.transform.SetParent(uiCanvas.transform);
 
         if (enemyPoint.GetComponent<EnemyPointUI>())
-            enemyPoint.GetComponent<EnemyPointUI>().enemyRef = enemyObj;
+            enemyPoint.GetComponent<EnemyPointUI>().targetRef = enemyObj;
     }
 }

@@ -816,6 +816,7 @@ GameObject:
   - component: {fileID: 2208454517105821308}
   - component: {fileID: 2208454517105821306}
   - component: {fileID: 2012464914}
+  - component: {fileID: 3584454174861349789}
   m_Layer: 10
   m_Name: EnemyBall
   m_TagString: Enemy
@@ -940,12 +941,27 @@ MonoBehaviour:
   isAlive: 0
   layerMask:
     serializedVersion: 2
-    m_Bits: 8192
+    m_Bits: 25088
   playerInView: 0
   target: {fileID: 0}
   hasUiPointer: 0
   isVisible: 0
   haveSpawnedVisible: 0
+--- !u!114 &3584454174861349789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2208454517105821304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 827dafa4ef248964c9c7bd054d6151f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isActive: 0
+  isVisible: 0
+  haveSpawned: 0
 --- !u!1 &2297089895573991425
 GameObject:
   m_ObjectHideFlags: 0

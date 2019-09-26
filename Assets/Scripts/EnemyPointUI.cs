@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class EnemyPointUI : MonoBehaviour
 {
-    public GameObject enemyRef;
+    public GameObject targetRef;
     private Camera cam;
     [SerializeField] private float rotateSpeed;
+
 
     private void Start()
     {
@@ -15,41 +16,52 @@ public class EnemyPointUI : MonoBehaviour
 
     private void Update()
     {
-        if (enemyRef.GetComponent<EnemyShoot>())
+        //if (targetRef.GetComponent<EnemyShoot>())
+        //{
+        //    if (targetRef.GetComponent<EnemyShoot>().isAlive)
+        //    {
+        //        if (targetRef.GetComponent<EnemyShoot>().hasUiPointer && targetRef.GetComponent<EnemyShoot>().isVisible)
+        //        {
+        //            Vector2 aimWorldPos = cam.WorldToScreenPoint(targetRef.transform.position);
+        //            transform.position = new Vector2(aimWorldPos.x, aimWorldPos.y);
+
+        //            transform.Rotate(0, 0, rotateSpeed);
+        //        }
+        //        else
+        //        {
+        //            Destroy(this.gameObject);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Destroy(this.gameObject);
+        //    }
+        //}
+
+        if (targetRef)
         {
-            if (enemyRef.GetComponent<EnemyShoot>().isAlive)
+            if (targetRef.GetComponent<TargetUIComponent>())
             {
-                if (enemyRef.GetComponent<EnemyShoot>().hasUiPointer && enemyRef.GetComponent<EnemyShoot>().isVisible)
+                if (targetRef.GetComponent<TargetUIComponent>().isActive && targetRef.GetComponent<TargetUIComponent>().isVisible && targetRef.GetComponent<TargetUIComponent>().playerCanSeeUs)
                 {
-                    Vector2 aimWorldPos = cam.WorldToScreenPoint(enemyRef.transform.position);
+                    Vector2 aimWorldPos = cam.WorldToScreenPoint(targetRef.transform.position);
                     transform.position = new Vector2(aimWorldPos.x, aimWorldPos.y);
 
                     transform.Rotate(0, 0, rotateSpeed);
                 }
                 else
                 {
-                    Destroy(this.gameObject);
+                    targetRef.GetComponent<TargetUIComponent>().haveSpawned = false;
+                    Destroy(gameObject);
                 }
             }
-            else
-            {
-                Destroy(this.gameObject);
-            }
         }
-        else if (enemyRef.GetComponent<DoorHolder>())
+        else
         {
-            if (enemyRef.GetComponent<DoorHolder>().hasUiPointer && enemyRef.GetComponent<DoorHolder>().isVisible)
-            {
-                Vector2 aimWorldPos = cam.WorldToScreenPoint(enemyRef.transform.position);
-                transform.position = new Vector2(aimWorldPos.x, aimWorldPos.y);
-
-                transform.Rotate(0, 0, rotateSpeed);
-            }
-            else
-            {
-                Destroy(this.gameObject);
-            }
+            Destroy(gameObject);
         }
+
+
 
     }
 }

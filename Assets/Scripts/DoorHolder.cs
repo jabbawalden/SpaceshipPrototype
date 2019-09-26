@@ -4,47 +4,41 @@ using UnityEngine;
 
 public class DoorHolder : MonoBehaviour
 {
-
     public GameObject doorWhole, doorBroken;
-    public bool isVisible;
-    public bool haveSpawnedVisible;
-    public bool hasUiPointer;
     PlayerShoot playerShoot;
+    TargetUIComponent targetUIComp;
 
     private void Awake()
     {
         playerShoot = FindObjectOfType<PlayerShoot>();
+        targetUIComp = GetComponent<TargetUIComponent>();
     }
 
     private void Start()
     {
         doorBroken.SetActive(false);
+        if (targetUIComp)
+            targetUIComp.isActive = true;
     }
 
     public void BreakDoors()
     {
         doorWhole.SetActive(false);
         doorBroken.SetActive(true);
+        if (targetUIComp)
+            targetUIComp.isActive = false;
         Destroy(gameObject);
     }
 
     private void OnBecameVisible()
     {
-        isVisible = true;
-        if (!hasUiPointer && !haveSpawnedVisible)
-        {
-            playerShoot.enemyInRange.Add(this.gameObject);
-            hasUiPointer = true;
-            haveSpawnedVisible = true;
-        }
-
+        if (targetUIComp)
+            targetUIComp.isVisible = true;
     }
-
     private void OnBecameInvisible()
     {
-        isVisible = false;
-        haveSpawnedVisible = false;
-        hasUiPointer = false;
-        playerShoot.enemyInRange.Remove(this.gameObject);
+        if (targetUIComp)
+            targetUIComp.isVisible = false;
     }
+
 }
