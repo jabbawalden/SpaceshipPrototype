@@ -12,6 +12,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider lifeMeter;
     [SerializeField] private Image shootFill;
     [SerializeField] private Image boostFill;
+    [SerializeField] private Image sideBars;
+    [SerializeField] private Image lifeDots; 
 
     private PlayerController playerController;
     private PlayerInput playerInput;
@@ -19,11 +21,12 @@ public class UIManager : MonoBehaviour
     private GameManager gameManager;
     //private GameObject shipMover;
 
-    [SerializeField] private Color overHeat;
+    [SerializeField] private Color redColor;
+    [SerializeField] private Color whiteColor;
 
     [SerializeField] private GameObject innerCircle;
     [SerializeField] private GameObject outerCircle;
-    [SerializeField] private GameObject uiPivots;
+    [SerializeField] private GameObject uiPivot;
     [SerializeField] private float innerRotationDivider;
     [SerializeField] private float outerRotationDivider;
     [SerializeField] private float uiPivotMultiplier;
@@ -48,6 +51,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject mainPanel;
     [SerializeField] private GameObject startPanel;
 
+    Vector2 originalPos;
     private void Awake()
     {
         playerInput = FindObjectOfType<PlayerInput>();
@@ -64,7 +68,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-
+        originalPos = uiPivot.transform.position;
     }
 
     // Update is called once per frame
@@ -85,8 +89,8 @@ public class UIManager : MonoBehaviour
 
     private void RotateUI()
     {
-        Quaternion innerRot = new Quaternion(playerController.shipMesh.localRotation.x / innerRotationDivider, playerController.shipMesh.localRotation.y / innerRotationDivider, playerController.shipMesh.localRotation.z / innerRotationDivider, playerController.shipMesh.localRotation.w);
-        Quaternion outerRot = new Quaternion(playerController.shipMesh.localRotation.x / outerRotationDivider, playerController.shipMesh.localRotation.y / outerRotationDivider, playerController.shipMesh.localRotation.z / outerRotationDivider, playerController.shipMesh.localRotation.w);
+        Quaternion innerRot = new Quaternion(playerController.shipMesh.transform.localRotation.x / innerRotationDivider, playerController.shipMesh.transform.localRotation.y / innerRotationDivider, playerController.shipMesh.transform.localRotation.z / innerRotationDivider, playerController.shipMesh.transform.localRotation.w);
+        Quaternion outerRot = new Quaternion(playerController.shipMesh.transform.localRotation.x / outerRotationDivider, playerController.shipMesh.transform.localRotation.y / outerRotationDivider, playerController.shipMesh.transform.localRotation.z / outerRotationDivider, playerController.shipMesh.transform.localRotation.w);
 
         float lerpVKey = Mathf.Lerp(currentLerp, -playerInput.vKey * uiPivotMultiplier, lerpTime);
         currentLerp = lerpVKey;
@@ -101,21 +105,21 @@ public class UIManager : MonoBehaviour
         if (playerInput.vKey == 0 && playerInput.vKey2 == 0)
         {
             //calculate primary pitch 
-            uiPivots.GetComponent<RectTransform>().offsetMax = new Vector2(0, lerpVKey);
-            uiPivots.GetComponent<RectTransform>().offsetMin = new Vector2(0, lerpVKey);
+            uiPivot.GetComponent<RectTransform>().offsetMax = new Vector2(0, lerpVKey);
+            uiPivot.GetComponent<RectTransform>().offsetMin = new Vector2(0, lerpVKey);
         }
         else if (playerInput.vKey != 0)
         {
             //continue calculate primary pitch 
-            uiPivots.GetComponent<RectTransform>().offsetMax = new Vector2(0, lerpVKey);
-            uiPivots.GetComponent<RectTransform>().offsetMin = new Vector2(0, lerpVKey);
+            uiPivot.GetComponent<RectTransform>().offsetMax = new Vector2(0, lerpVKey);
+            uiPivot.GetComponent<RectTransform>().offsetMin = new Vector2(0, lerpVKey);
         }
         else if (playerInput.vKey == 0 && playerInput.vKey2 != 0)
         {
             float lerpVKey2 = Mathf.Lerp(currentLerp, -playerInput.vKey2 * uiPivotMultiplier, lerpTime);
             currentLerp = lerpVKey2;
-            uiPivots.GetComponent<RectTransform>().offsetMax = new Vector2(0, lerpVKey2);
-            uiPivots.GetComponent<RectTransform>().offsetMin = new Vector2(0, lerpVKey2);
+            uiPivot.GetComponent<RectTransform>().offsetMax = new Vector2(0, lerpVKey2);
+            uiPivot.GetComponent<RectTransform>().offsetMin = new Vector2(0, lerpVKey2);
             //continue calculate secondary pitch 
         }
     }
@@ -164,7 +168,7 @@ public class UIManager : MonoBehaviour
 
     public void ShootMeterColorRed()
     {
-        shootFill.color = overHeat;
+        shootFill.color = redColor;
     }
 
     public void ShootMeterColorWhite() 
@@ -174,7 +178,7 @@ public class UIManager : MonoBehaviour
 
     public void BoostMeterRed()
     {
-        boostFill.color = overHeat;
+        boostFill.color = redColor;
     }
 
     public void BoostMeterWhite()
@@ -243,5 +247,41 @@ public class UIManager : MonoBehaviour
         lifeMeter.GetComponent<RectTransform>().DOScale(new Vector3(1.4f, 0.6f, 1), 0.2f);
         yield return new WaitForSeconds(0.2f);
         lifeMeter.GetComponent<RectTransform>().DOScale(new Vector3(1.1f, 0.5f, 1), 0.3f);
+    }
+
+    public void UIDamageColor()
+    {
+        StartCoroutine(UIColorSequence());
+    }
+
+    IEnumerator UIColorSequence()
+    {
+        sideBars.DOColor(redColor, 0.35f);
+        lifeDots.DOColor(redColor, 0.35f);
+        yield return new WaitForSeconds(0.4f);
+        sideBars.DOColor(whiteColor, 0.4f);
+        lifeDots.DOColor(whiteColor, 0.45f);
+    }
+
+    public void UIDamageShake(float duration, float magnitude)
+    {
+        StartCoroutine(Shake(duration, magnitude));
+    }
+
+    public IEnumerator Shake(float duration, float magnitude)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            magnitude *= 0.965f;
+            float x = Random.Range(-1, 1) * magnitude;
+            float y = Random.Range(-1, 1) * magnitude;
+            uiPivot.transform.position = new Vector2(x + originalPos.x, y + originalPos.y);
+            elapsed += Time.deltaTime;
+            //wait until the next frame starts before updating
+            yield return null;
+        }
+
+        uiPivot.transform.position = originalPos;
     }
 }

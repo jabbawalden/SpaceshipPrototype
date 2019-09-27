@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     private GameManager gameManager;
 
     public SpeedState speedState;
-    public Transform shipMesh;
+    public GameObject shipMesh;
     public float engineMomentum;
     public float currentEngineMomentum;
     public float maxEngineMomentum;
@@ -110,6 +110,11 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         EnergyRegenerate();
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            DamagePlayer();
+        }
     }
 
     private void Death()
@@ -207,7 +212,7 @@ public class PlayerController : MonoBehaviour
 
             lerpValue = Mathf.Lerp(current, -rollMesh, smoothTime);
             current = lerpValue;
-            shipMesh.localRotation = Quaternion.Euler(shipMesh.localRotation.x, shipMesh.localRotation.y, current);
+            shipMesh.transform.localRotation = Quaternion.Euler(shipMesh.transform.localRotation.x, shipMesh.transform.localRotation.y, current);
 
             float lerpPitch = Mathf.LerpAngle(mT.rotation.x, pitch, smoothPitch);
             float lerpYaw = Mathf.LerpAngle(transform.rotation.y, yaw, smoothYaw);
@@ -215,33 +220,20 @@ public class PlayerController : MonoBehaviour
 
 
             if (inputH != 0)
-            {
                 mT.Rotate(0, lerpYaw, 0);
-            }
             else
-            {
                 mT.Rotate(0, 0, 0);
-            }
 
             if (inputV != 0)
-            {
                 mT.Rotate(lerpPitch, 0, 0);
-            }
             else
-            {
                 mT.Rotate(0, 0, 0);
-            }
-
 
             if (inputR != 0)
-            {
                 mT.Rotate(0, 0, lerpRoll);
-
-            }
             else
-            {
                 mT.Rotate(0, 0, 0);
-            }
+
         }
     }
 
@@ -278,7 +270,9 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            cameraShake.CallCamShake(0.7f, 0.38f);
+            cameraShake.CallCamShake(0.9f, 0.25f);
+            uiManager.UIDamageShake(1, 9);
+            uiManager.UIDamageColor();
         }
     }
 

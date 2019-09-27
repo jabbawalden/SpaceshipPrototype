@@ -13,10 +13,7 @@ public class CameraShake : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            CallCamShake(0.7f, 0.58f);
-        }
+
     }
 
     public void CallCamShake(float duration, float magnitude)

@@ -8,11 +8,12 @@ public class PlayerShoot : MonoBehaviour
     private PlayerInput playerInput;
     private UIManager uiManager;
     private GameManager gameManager;
+    private PlayerController playerController;
 
     public Image crossHair;
     public Image enemyPointUI;
     public List<GameObject> enemyInRange = new List<GameObject>();
-    public GameObject AimerCubeTest;
+    public GameObject AimerObj;
     public GameObject uiCanvas;
 
     [SerializeField] private LayerMask layerMask;
@@ -39,6 +40,7 @@ public class PlayerShoot : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         uiManager = FindObjectOfType<UIManager>();
         playerInput = FindObjectOfType<PlayerInput>();
+        playerController = FindObjectOfType<PlayerController>();
     }
 
     private void Start()
@@ -120,19 +122,19 @@ public class PlayerShoot : MonoBehaviour
 
             if (hit.collider.gameObject.layer == 13 || hit.collider.gameObject.layer == 10 || hit.collider.gameObject.layer == 16 || hit.collider.gameObject.layer == 17)
             {
-                AimerCubeTest.transform.position = hit.point;
+                AimerObj.transform.position = hit.point;
             }
             else
             {
-                AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
+                AimerObj.transform.position = ray.origin + ray.direction * rayDistance;
             }
         }
         else
         {
-            AimerCubeTest.transform.position = ray.origin + ray.direction * rayDistance;
+            AimerObj.transform.position = ray.origin + ray.direction * rayDistance;
         }
 
-        Vector2 aimWorldPos = cam.WorldToScreenPoint(AimerCubeTest.transform.position);
+        Vector2 aimWorldPos = cam.WorldToScreenPoint(AimerObj.transform.position);
         crossHair.rectTransform.position = new Vector2(aimWorldPos.x, aimWorldPos.y);
     }
 
@@ -151,7 +153,6 @@ public class PlayerShoot : MonoBehaviour
                 {
                     if (hit.collider.GetComponentInParent<TargetUIComponent>())
                     {
-                        print("player seeing the enemy");
                         hit.collider.GetComponentInParent<TargetUIComponent>().isVisible = true;
 
                         if (!hit.collider.GetComponentInParent<TargetUIComponent>().haveSpawned && hit.collider.GetComponentInParent<TargetUIComponent>().playerCanSeeUs)
@@ -174,6 +175,14 @@ public class PlayerShoot : MonoBehaviour
         enemyPoint.transform.SetParent(uiCanvas.transform);
 
         if (enemyPoint.GetComponent<EnemyPointUI>())
+        {
             enemyPoint.GetComponent<EnemyPointUI>().targetRef = enemyObj;
+
+            if (playerController)
+                enemyPoint.GetComponent<EnemyPointUI>().playerRef = playerController.shipMesh;
+
+        }
+
+
     }
 }

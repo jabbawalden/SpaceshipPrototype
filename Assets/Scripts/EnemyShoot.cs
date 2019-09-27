@@ -36,7 +36,7 @@ public class EnemyShoot : MonoBehaviour
         target = GameObject.Find("ShipMover");
         isAlive = true;
         detectPlayer = GetComponentInChildren<DetectPlayer>();
-        float r = Random.Range(0, 6);
+        float r = Random.Range(2, 7);
         max = r;
         min = -r;
     }
