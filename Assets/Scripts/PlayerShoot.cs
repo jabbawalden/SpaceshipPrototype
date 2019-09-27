@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class PlayerShoot : MonoBehaviour
 {
+    private PlayerInput playerInput;
+    private UIManager uiManager;
+    private GameManager gameManager;
+
     public Image crossHair;
     public Image enemyPointUI;
     public List<GameObject> enemyInRange = new List<GameObject>();
@@ -27,21 +31,28 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] float maxHeat;
     [SerializeField] private float currentHeat;
 
-    private PlayerInput playerInput;
-    private UIManager uiManager;
+
     [System.NonSerialized] public bool haveReachedLimit;
+
+    private void Awake()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+        uiManager = FindObjectOfType<UIManager>();
+        playerInput = FindObjectOfType<PlayerInput>();
+    }
 
     private void Start()
     {
-        uiManager = FindObjectOfType<UIManager>();
-        playerInput = FindObjectOfType<PlayerInput>();
         currentHeat = maxHeat;
     }
 
     private void Update()
     {
-        Aimer();
-        EnemySight();
+        if (gameManager.gameState == GameState.Playing)
+        {
+            Aimer();
+            EnemySight();
+        }
 
         if (newRegenTime <= Time.time)
         {

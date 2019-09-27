@@ -1063,14 +1063,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3300404934111081276}
-  m_LocalRotation: {x: -0, y: 0.043579593, z: -0, w: 0.99904996}
-  m_LocalPosition: {x: -70.21, y: 62.6, z: -336.3}
+  m_LocalRotation: {x: 0.12907995, y: 0.04321433, z: 0.005630601, w: 0.9906761}
+  m_LocalPosition: {x: -1174.5, y: 282.6, z: -2059.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3300404934822865852}
   m_Father: {fileID: 3300404934321909149}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 4.9950004, z: 0}
+  m_LocalEulerAnglesHint: {x: 14.7890005, y: 5.1670003, z: 1.322}
 --- !u!114 &3300404934111081266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1087,8 +1087,8 @@ MonoBehaviour:
   shipMesh: {fileID: 3300404934822865852}
   engineMomentum: 0
   currentEngineMomentum: 0
-  maxEngineMomentum: 40
-  boostEngineMomentum: 65
+  maxEngineMomentum: 70
+  boostEngineMomentum: 70
   speedLerp: 0.1
   engineMomentumChangeLerp: 0.1
   turnSpeed: 1.7
@@ -1104,8 +1104,8 @@ MonoBehaviour:
   spinSpeed: 80
   shipNormal: {fileID: 8290772929982771220}
   shipDestroyed: {fileID: 8559356612875351175}
-  maxEnergy: 200
-  regenRate: 0.01
+  maxEnergy: 250
+  regenRate: 0.005
   haveReachedLimit: 0
 --- !u!114 &3300404934111081264
 MonoBehaviour:
@@ -1156,10 +1156,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crossHair: {fileID: 0}
+  enemyPointUI: {fileID: 963242041267146874, guid: c00805e31fb364049a5c2117ef8c4b56,
+    type: 3}
+  enemyInRange: []
   AimerCubeTest: {fileID: 0}
+  uiCanvas: {fileID: 0}
   layerMask:
     serializedVersion: 2
-    m_Bits: 74752
+    m_Bits: 205824
   rayOrigin: {fileID: 3300404934033028974}
   cam: {fileID: 2977653193676765260}
   rayDistance: 95000
@@ -1167,7 +1171,7 @@ MonoBehaviour:
     type: 3}
   origin1: {fileID: 3300404935035459519}
   origin2: {fileID: 3300404935525704596}
-  projSpeed: 19000
+  projSpeed: 31000
   fireRate: 0.1
   newTime: 0
   regenRate: 0.05
@@ -1182,9 +1186,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3300404934111081276}
   serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0.5
-  m_AngularDrag: 1
+  m_Mass: 10
+  m_Drag: 0.25
+  m_AngularDrag: 0.5
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -2687,14 +2691,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7117895963892226703}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -70.21, y: 62.6, z: -336.3}
+  m_LocalRotation: {x: 0.12920274, y: -0, z: -0, w: 0.9916182}
+  m_LocalPosition: {x: -1174.5, y: 282.6, z: -2059.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7740156777562294397}
   m_Father: {fileID: 3300404934321909149}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 14.847001, y: 0, z: 0}
 --- !u!114 &1858425225750953393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2820,7 +2824,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8795422554693286146}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3981403668386398783}
@@ -2850,7 +2854,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 8000
-  field of view: 66
+  field of view: 26.991467
   orthographic: 0
   orthographic size: 5
   m_Depth: -1

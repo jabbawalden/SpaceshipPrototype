@@ -58,11 +58,11 @@ public class ProjectileBehaviour : MonoBehaviour
         {
             other.GetComponent<DoorHolder>().BreakDoors();
         }
-        if (other.CompareTag("MainShip"))
+        else if (other.gameObject.layer == 13)
         {
-            //print("Main Ship");
             Destroy(gameObject);
         }
+
 
     }
 

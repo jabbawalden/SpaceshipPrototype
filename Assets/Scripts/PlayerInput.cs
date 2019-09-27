@@ -118,13 +118,17 @@ public class PlayerInput : MonoBehaviour
         playerController.inputPitch = vKey;
 
 
-        if (vKey != 0)
+        if (vKey != 0 && vKey2 == 0)
         {
             playerController.inputPitch = vKey;
         }
-        else
+        else if (vKey == 0 && vKey2 != 0)
         {
             playerController.inputPitch = vKey2;
+        }
+        else if (vKey != 0 && vKey2 != 0)
+        {
+            playerController.inputPitch = vKey + vKey2;
         }
 
         playerController.inputTurn = hKey;

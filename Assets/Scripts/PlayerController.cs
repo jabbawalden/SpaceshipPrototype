@@ -278,7 +278,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            cameraShake.CallCamShake(0.6f, 0.18f);
+            cameraShake.CallCamShake(0.7f, 0.38f);
         }
     }
 

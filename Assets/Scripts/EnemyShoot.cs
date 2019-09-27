@@ -7,6 +7,7 @@ public class EnemyShoot : MonoBehaviour
     private DetectPlayer detectPlayer;
     private UIManager uiManager;
     private TargetUIComponent targetUIComp;
+    private GameManager gameManager;
 
     [SerializeField] private GameObject projectile;
     [SerializeField] private Transform origin1;
@@ -29,6 +30,7 @@ public class EnemyShoot : MonoBehaviour
 
     private void Awake()
     {
+        gameManager = FindObjectOfType<GameManager>();
         targetUIComp = GetComponent<TargetUIComponent>();
         uiManager = FindObjectOfType<UIManager>();
         target = GameObject.Find("ShipMover");
@@ -48,15 +50,18 @@ public class EnemyShoot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (detectPlayer.player && isAlive)
+        if (gameManager.gameState == GameState.Playing)
         {
-            ShootProjectile();
+            if (detectPlayer.player && isAlive)
+            {
+                ShootProjectile();
+            }
+            else if (!isAlive)
+            {
+                targetUIComp.isActive = false;
+            }
+            targetDirection = target.transform.position - origin1.transform.position;
         }
-        else if (!isAlive)
-        {
-            targetUIComp.isActive = false;
-        }
-        targetDirection = target.transform.position - origin1.transform.position;
     }
 
     private void FixedUpdate()
