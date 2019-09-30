@@ -120,7 +120,7 @@ public class EnemyShoot : MonoBehaviour
             playerInView = false;
         }
 
-        Debug.DrawRay(origin1.position, targetDirection);
+        //Debug.DrawRay(origin1.position, targetDirection);
     }
     
 
