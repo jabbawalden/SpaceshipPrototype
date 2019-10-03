@@ -1099,7 +1099,8 @@ MonoBehaviour:
   smoothRoll: 0.5
   smoothTime: 0.06
   alive: 0
-  maxHealth: 3
+  currentHealth: 0
+  maxHealth: 5
   sideSpinning: 0
   spinSpeed: 80
   shipNormal: {fileID: 8290772929982771220}
@@ -1159,7 +1160,7 @@ MonoBehaviour:
   enemyPointUI: {fileID: 963242041267146874, guid: c00805e31fb364049a5c2117ef8c4b56,
     type: 3}
   enemyInRange: []
-  AimerCubeTest: {fileID: 0}
+  AimerObj: {fileID: 0}
   uiCanvas: {fileID: 0}
   layerMask:
     serializedVersion: 2
@@ -1172,7 +1173,7 @@ MonoBehaviour:
   origin1: {fileID: 3300404935035459519}
   origin2: {fileID: 3300404935525704596}
   projSpeed: 51000
-  fireRate: 0.1
+  fireRate: 0.05
   newTime: 0
   regenRate: 0.05
   newRegenTime: 0

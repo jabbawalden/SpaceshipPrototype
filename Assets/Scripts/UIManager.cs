@@ -151,6 +151,9 @@ public class UIManager : MonoBehaviour
 
     private void LifeMeter()
     {
+        lifeMeter.value = playerController.LifePercent();
+
+        /*
         switch(playerController.currentHealth)
         {
             case 3:
@@ -163,7 +166,7 @@ public class UIManager : MonoBehaviour
                 lifeMeter.value = 0.33f;
                 break;
         }
-
+        */
     }
 
     public void ShootMeterColorRed()

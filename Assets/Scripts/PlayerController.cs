@@ -49,8 +49,8 @@ public class PlayerController : MonoBehaviour
     bool haveStoppedInput;
 
     public bool alive;
-    [System.NonSerialized] public int currentHealth;
-    public int maxHealth;
+    public float currentHealth;
+    public float maxHealth;
 
     [SerializeField] private bool sideSpinning;
     [SerializeField] private float spinSpeed;
@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
     private float currentEnergy;
     [SerializeField] private float regenRate;
     private float newRegenTime;
-    /*[System.NonSerialized] */public bool haveReachedLimit;
+    public bool haveReachedLimit;
 
 
     private void Awake()
@@ -274,6 +274,12 @@ public class PlayerController : MonoBehaviour
             uiManager.UIDamageShake(1, 9);
             uiManager.UIDamageColor();
         }
+    }
+
+    public float LifePercent()
+    {
+        float percent = currentHealth / maxHealth;
+        return percent;
     }
 
     public void HealPlayer()
