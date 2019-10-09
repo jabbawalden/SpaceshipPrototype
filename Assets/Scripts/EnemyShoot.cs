@@ -134,6 +134,7 @@ public class EnemyShoot : MonoBehaviour
                 mesh.layer = 14;
             }
             uiManager.AddTurretKillCount();
+            uiManager.UIHitColorSize();
             isAlive = false;
         }
 

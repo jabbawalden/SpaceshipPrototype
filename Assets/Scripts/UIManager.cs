@@ -23,6 +23,9 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Color redColor;
     [SerializeField] private Color whiteColor;
+    [SerializeField] private Color hitHiddenColor; 
+    [SerializeField] private Color hitVisibleColor;
+    [SerializeField] private Image hitImage;
 
     [SerializeField] private GameObject innerCircle;
     [SerializeField] private GameObject outerCircle;
@@ -69,6 +72,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         originalPos = uiPivot.transform.position;
+        hitImage.color = hitHiddenColor;
     }
 
     // Update is called once per frame
@@ -250,6 +254,22 @@ public class UIManager : MonoBehaviour
         lifeMeter.GetComponent<RectTransform>().DOScale(new Vector3(1.4f, 0.6f, 1), 0.2f);
         yield return new WaitForSeconds(0.2f);
         lifeMeter.GetComponent<RectTransform>().DOScale(new Vector3(1.1f, 0.5f, 1), 0.3f);
+    }
+
+    public void UIHitColorSize()
+    {
+        StartCoroutine(UIHitSequence());
+    }
+
+    IEnumerator UIHitSequence()
+    {
+        hitImage.DOColor(hitVisibleColor, 0.05f);
+        hitImage.rectTransform.DOScale(new Vector2(1.5f, 1.5f), 0.2f);
+        yield return new WaitForSeconds(0.3f);
+        hitImage.rectTransform.DOScale(new Vector2(1, 1), 0.25f);
+        yield return new WaitForSeconds(0.1f);
+        hitImage.DOColor(hitHiddenColor, 0.4f);
+
     }
 
     public void UIDamageColor()
